@@ -130,11 +130,17 @@ NeoBundle 'tpope/vim-markdown'
 NeoBundle 'jtratner/vim-flavored-markdown'
 NeoBundle 'suan/vim-instant-markdown'
 NeoBundle 'vim-jp/vimdoc-ja'			" 日本語ヘルプ
-NeoBundle 'vim-scripts/fcitx.vim'		" normal モードで IME(fcitx) OFF
 NeoBundle 'vim-scripts/trailing-whitespace'	" trailing-whitespace を赤色表示
 NeoBundle 'deton/jasegment.vim'			" 日本語の文節でWORD移動
 NeoBundle 'Lokaltog/vim-powerline'		" かっこいいステータスライン
 NeoBundle 'scrooloose/nerdcommenter'		" \c<Space> でコメント切り替え
+" ------------------------------------------------------------------------------
+" Input Method Control
+" ------------------------------------------------------------------------------
+" NeoBundle 'vim-scripts/fcitx.vim'		" normalモードでIM(fcitx) OFF
+NeoBundle 'fuenor/im_control.vim'		" normalモードでIM(ibus等) OFF
+inoremap <silent> <C-j> <C-r>=IMState('FixMode')<CR>| "<C-j> で日本語切り替え
+let IM_CtrlIBusPython=1				" PythonによるIBus制御指定
 " ------------------------------------------------------------------------------
 " Algin
 " ------------------------------------------------------------------------------
