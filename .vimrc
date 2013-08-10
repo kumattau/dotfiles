@@ -105,9 +105,10 @@ let fortran_indent_less=1		" プログラム単位のインデントを無効化
 " ------------------------------------------------------------------------------
 if has("gui_running")
   set guifont=Monospace\ 9		" フォントを小さくする
-  set guioptions&
-  set guioptions-=T			" ツールバーを非表示
-  set lines=48 columns=80		" 起動時の画面サイズ
+  set guioptions& guioptions-=T		" ツールバーを非表示
+  if has("vim_starting")		" 起動時のみに動作させる(リロード対応)
+    set columns=80 lines=48		" 84x26 より画面サイズを大きくする
+  endif
 endif
 " ------------------------------------------------------------------------------
 " plugin (NeoBundle) (2nd phase, mainly)
@@ -123,7 +124,6 @@ NeoBundle 'Shougo/vimproc', {
 \ }
 NeoBundle 'Shougo/unite.vim'
 NeoBundle 'Shougo/vimshell'
-NeoBundle 'tpope/vim-surround'
 NeoBundle 'tyru/open-browser.vim'
 NeoBundle 'kien/ctrlp.vim'
 NeoBundle 'tpope/vim-markdown'
@@ -134,6 +134,7 @@ NeoBundle 'vim-scripts/trailing-whitespace'	" trailing-whitespace を赤色表�
 NeoBundle 'deton/jasegment.vim'			" 日本語の文節でWORD移動
 NeoBundle 'Lokaltog/vim-powerline'		" かっこいいステータスライン
 NeoBundle 'scrooloose/nerdcommenter'		" \c<Space> でコメント切り替え
+NeoBundle 'tpope/vim-surround'			" visualモードでS<文字>で囲む
 " ------------------------------------------------------------------------------
 " Input Method Control
 " ------------------------------------------------------------------------------
