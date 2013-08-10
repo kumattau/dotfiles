@@ -1,35 +1,33 @@
+" ------------------------------------------------------------------------------
+" my vimrc
+" ========
+"
+" tips
+" ----
+" * リロータブルな vimrc の記述
+"   * http://whileimautomaton.net/2008/08/vimworkshop3-kana-presentation
+"   * +=, -= で設定を追加する場合、set option& で一度デフォルトに戻す
+" * オプションの設定方法
+"   * http://vim-users.jp/2009/05/hack5/)
+" * map (キーマップ変更) はタブや空白が意味を持つので"|"で終端させる
+"
+" ------------------------------------------------------------------------------
 set nocompatible			" vi 非互換(宣言)
 scriptencoding utf-8			" vimrcのエンコーディング
 " ------------------------------------------------------------------------------
+" reset vimrc autocmd group
+" ------------------------------------------------------------------------------
+augroup vimrc
+  autocmd!
+augroup END
+" ------------------------------------------------------------------------------
 " effective vim customize
 " ------------------------------------------------------------------------------
-nnoremap [vim] <Nop>|			" vim 設定ショートカット
-nmap     <Space>v [vim]|		" <Space>v で prefix
-nnoremap [vim]e :edit $MYVIMRC<CR>|	" <Space>ve で vimrc を開く
-nnoremap [vim]s :source $MYVIMRC<CR>|	" <Space>vs で vimrc を再読み込み
-nnoremap [vim]h :helpgrep<Space>|	" <space>vh で help を検索する
-" ------------------------------------------------------------------------------
-" plugin (NeoBundle) (1st phase, minimal)
-" ------------------------------------------------------------------------------
-filetype plugin indent off		" Required by Neobundle
-if has('vim_starting')
-  set runtimepath+=~/.vim/bundle/neobundle.vim
-  call neobundle#rc(expand('~/.vim/bundle/'))
-endif
-NeoBundle 'Shougo/neobundle.vim'
-NeoBundle 'wombat256.vim'
-NeoBundle 'altercation/vim-colors-solarized'
-filetype plugin indent on		" Required by Neobundle
-" ------------------------------------------------------------------------------
-" color
-" ------------------------------------------------------------------------------
-syntax on				" カラー表示
-set t_Co=256				" ターミナルで256色対応
-colorscheme wombat256mod		" 256色対応 wombat
-" colorscheme solarized			" solarized
-" set background=dark			" 背景色を暗めに
-" let g:solarized_termcolors=256	" 256色対応
-" let g:solarized_contrast="high"	" コントラストを高めに
+nnoremap [vimrc] <Nop>|			" vim 設定ショートカット
+nmap     <Space>v [vimrc]|		" <Space>v で prefix
+nnoremap [vimrc]e :edit $MYVIMRC<CR>|	" <Space>ve で vimrc を開く
+nnoremap [vimrc]s :source $MYVIMRC<CR>|	" <Space>vs で vimrc を再読み込み
+nnoremap [vimrc]h :helpgrep<Space>|	" <Space>vh で help を検索する
 " ------------------------------------------------------------------------------
 " search
 " ------------------------------------------------------------------------------
@@ -45,8 +43,6 @@ nmap <Esc><Esc> :nohlsearch<CR><Esc>|	" Esc 連打でハイライト無効
 set showmatch				" 対応する括弧をハイライト表示
 set matchtime=3				" 対応括弧のハイライト表示を3秒にする
 set wrap				" 文字を折り返す
-set list				" 不可視文字を可視化
-set listchars=tab:»\ ,trail:˷,nbsp:▫	" タグを可視化(0x00BB, 0x02F7, 0x25AB)
 " ------------------------------------------------------------------------------
 " edit
 " ------------------------------------------------------------------------------
@@ -56,6 +52,9 @@ set hidden				" バッファを閉じずに隠す(Undo履歴を残す)
 set switchbuf=useopen			" 新しく開く代わりに既存バッファを開く
 set backspace=indent,eol,start		" バックスペースで何でも消せるようにする
 set textwidth=0				" 自動的に改行が入るのを無効化
+if has("persistent_undo")
+  set undofile				" 可能なら undo 履歴を永続的に保存する
+endif
 " ------------------------------------------------------------------------------
 " ascii escape provision
 " ------------------------------------------------------------------------------
@@ -68,7 +67,8 @@ nnoremap OD gi<Left>|			" 左矢印を有効に
 " ------------------------------------------------------------------------------
 set nobackup				" ~xxxを作成しない
 set noswapfile				" .xxx.swpを作成しない
-set visualbell t_vb=			" スクリーンベルを無効化
+" ベル無効化 (Vim 起動後に設定することで CUI/GUI の両方に対応させている)
+autocmd vimrc VimEnter * set visualbell t_vb=
 " ------------------------------------------------------------------------------
 " statusline
 " ------------------------------------------------------------------------------
@@ -84,16 +84,19 @@ set ambiwidth=double			" 曖昧な幅の文字(○や□)を全角と判断す�
 set splitbelow				" ウィンドウ分割を(上でなく)下側に変更
 set splitright				" ウィンドウ分割を(左でなく)右側に変更
 " ------------------------------------------------------------------------------
+" menu
+" ------------------------------------------------------------------------------
+set wildmenu				" メニューの補完
+set wildmode=list:longest		" 全マッチを列挙し最長の文字列まで補完
+" ------------------------------------------------------------------------------
 " indent
 " ------------------------------------------------------------------------------
 set tabstop=8				" 互換のためタブは8文字のままにしておく
-augroup vimrc
-autocmd! FileType c       setlocal           shiftwidth=8 softtabstop=8
-autocmd! FileType sh      setlocal expandtab shiftwidth=2 softtabstop=2
-autocmd! FileType awk     setlocal expandtab shiftwidth=2 softtabstop=2
-autocmd! FileType python  setlocal expandtab shiftwidth=4 softtabstop=4
-autocmd! FileType fortran setlocal expandtab shiftwidth=2 softtabstop=2
-augroup END
+autocmd vimrc FileType c       setlocal           shiftwidth=8 softtabstop=8
+autocmd vimrc FileType sh      setlocal expandtab shiftwidth=2 softtabstop=2
+autocmd vimrc FileType awk     setlocal expandtab shiftwidth=2 softtabstop=2
+autocmd vimrc FileType python  setlocal expandtab shiftwidth=4 softtabstop=4
+autocmd vimrc FileType fortran setlocal expandtab shiftwidth=2 softtabstop=2
 " ------------------------------------------------------------------------------
 " fortran specific
 " ------------------------------------------------------------------------------
@@ -101,7 +104,7 @@ let fortran_free_source=1		" 自由形式を有効にする
 let fortran_do_enddo=1			" doループのインデント
 let fortran_indent_less=1		" プログラム単位のインデントを無効化
 " ------------------------------------------------------------------------------
-" GUI Setting
+" GUI specific setting
 " ------------------------------------------------------------------------------
 if has("gui_running")
   set guifont=Monospace\ 9		" フォントを小さくする
@@ -111,9 +114,13 @@ if has("gui_running")
   endif
 endif
 " ------------------------------------------------------------------------------
-" plugin (NeoBundle) (2nd phase, mainly)
+" plugin (NeoBundle)
 " ------------------------------------------------------------------------------
 filetype plugin indent off		" Required by Neobundle
+if has('vim_starting')
+  set runtimepath+=~/.vim/bundle/neobundle.vim
+  call neobundle#rc(expand('~/.vim/bundle/'))
+endif
 NeoBundle 'Shougo/vimproc', {
   \ 'build' : {
     \ 'windows' : 'make -f make_mingw32.mak',
@@ -130,11 +137,55 @@ NeoBundle 'tpope/vim-markdown'
 NeoBundle 'jtratner/vim-flavored-markdown'
 NeoBundle 'suan/vim-instant-markdown'
 NeoBundle 'vim-jp/vimdoc-ja'			" 日本語ヘルプ
-NeoBundle 'vim-scripts/trailing-whitespace'	" trailing-whitespace を赤色表示
 NeoBundle 'deton/jasegment.vim'			" 日本語の文節でWORD移動
-NeoBundle 'Lokaltog/vim-powerline'		" かっこいいステータスライン
 NeoBundle 'scrooloose/nerdcommenter'		" \c<Space> でコメント切り替え
 NeoBundle 'tpope/vim-surround'			" visualモードでS<文字>で囲む
+" ------------------------------------------------------------------------------
+" appearance
+" ------------------------------------------------------------------------------
+syntax on					" カラー表示
+set t_Co=256					" ターミナルで256色対応
+" NeoBundle 'vim-scripts/trailing-whitespace'	" trailing-whitespace を赤色表示
+NeoBundle 'Pychimp/vim-luna'
+NeoBundle 'Shougo/neobundle.vim'
+NeoBundle 'altercation/vim-colors-solarized'
+NeoBundle 'baskerville/bubblegum'
+NeoBundle 'chriskempson/vim-tomorrow-theme'
+NeoBundle 'wombat256.vim'
+" colorscheme bubblegum				" 淡い配色
+" colorscheme luna				" pop な配色
+" colorscheme wombat256mod			" 256色対応 wombat
+" colorscheme solarized				" solarized
+" let g:solarized_termcolors=256		" 256色対応
+" let g:solarized_contrast="high"		" コントラストを高めに
+colorscheme Tomorrow-Night-Eighties		" pop な配色
+set list listchars=tab:»\ ,trail:˷,nbsp:▫	" 不可視文字を可視化
+set cursorline 					" カーソル行ハイライト
+highlight CursorLine gui=underline guifg=NONE guibg=NONE
+highlight CursorLine term=underline cterm=underline ctermfg=NONE ctermbg=NONE
+let g:my_syntax_status='on'
+function! g:my_toggle_syntax()
+  if g:my_syntax_status=='on'
+    syntax off
+    let g:my_syntax_status='off'
+  else
+    syntax on
+    let g:my_syntax_status='on'
+  endif
+endfunction
+nnoremap [appr] <Nop>|				" appr 設定ショートカット
+nmap     <Space>a [appr]|			" <Space>a で prefix
+nnoremap <silent> [appr]l :set list!<CR>|	" カーソルトグル
+nnoremap <silent> [appr]c :set cursorline!<CR>| " 不可視文字トグル
+nnoremap <silent> [appr]s :<C-u>call g:my_toggle_syntax()<CR>|	" syntax トグル
+" ------------------------------------------------------------------------------
+" pretty status line
+" ------------------------------------------------------------------------------
+" NeoBundle 'Lokaltog/vim-powerline'		" かっこいいステータスライン(old)
+NeoBundle 'bling/vim-airline'			" かっこいいステーラスライン(new)
+let g:airline_left_sep=''			" fontパッチを当ててないので
+let g:airline_right_sep=''			" 左右のセパレータを削除する
+let g:airline_theme='tomorrow'			" 全体のカラースキーマに合わせる
 " ------------------------------------------------------------------------------
 " Input Method Control
 " ------------------------------------------------------------------------------
@@ -167,12 +218,12 @@ nnoremap [yankring]s :YRSearch<Space>|		" <space>ys で Ring 検索
 " ------------------------------------------------------------------------------
 " neocomplete/neocomplcache
 " ------------------------------------------------------------------------------
-if has('lua') && v:version >= 703 && has('patch885')
+if has('lua') && ((v:version >= 704) || (v:version >= 703 && has('patch885')))
   NeoBundleLazy 'Shougo/neocomplete.vim', {'autoload': {'insert': 1}}
-  let g:neocomplete#enable_at_startup=1		"  起動時に有効化
+  let g:neocomplete#enable_at_startup=1			"  起動時に有効化
   let s:hooks = neobundle#get_hooks("neocomplete.vim")
   function! s:hooks.on_source(bundle)
-    let g:neocomplete#auto_completion_start_length=9	" 自動補完を抑止(通常2)
+    " let g:neocomplete#auto_completion_start_length=9	" 自動補完を抑止(通常2)
     let g:neocomplete#enable_smart_case=1		" 大文字小文字の賢い補完
   endfunction
 else
@@ -180,7 +231,7 @@ else
   let g:neocomplcache_enable_at_startup=1		" 起動時に有効化
   let s:hooks = neobundle#get_hooks("neocomplcache.vim")
   function! s:hooks.on_source(bundle)
-    let g:neocomplcache_auto_completion_start_length=9	" 自動補完を抑止(通常2)
+    " let g:neocomplcache_auto_completion_start_length=9" 自動補完を抑止(通常2)
     let g:neocomplcache_enable_smart_case=1		" 大文字小文字の賢い補完
   endfunction
 endif
