@@ -233,7 +233,7 @@ vnoremap <silent> <Space>K :<C-u>call ref#jump('visual', 'webdict')<CR>
 " ------------------------------------------------------------------------------
 " vim-jedi (python code completion)
 " ------------------------------------------------------------------------------
-" NeoBundle 'davidhalter/jedi-vim'
+NeoBundleLazy 'davidhalter/jedi-vim', {'autoload': {'filetypes': ['python']}}
 let g:jedi#auto_initialize=0			" 自動初期化
 let g:jedi#auto_vim_configuration=0		" preview抑止のため自動設定無効
 let g:jedi#popup_select_first=0			" 最初の候補を選択しない
