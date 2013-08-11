@@ -122,7 +122,11 @@ let fortran_indent_less=1		" プログラム単位のインデントを無効化
 " GUI specific setting
 " ------------------------------------------------------------------------------
 if has("gui_running")
-  set guifont=Monospace\ 9		" フォントを小さくする
+  if has("win32") || has("win64")
+    set guifont=MS_Gothic:h9:cSHIFTJIS	" フォントを小さくする (windows)
+  else
+    set guifont=Monospace\ 9		" フォントを小さくする (not windows)
+  endif
   set guioptions& guioptions-=T		" ツールバーを非表示
   if has("vim_starting")		" 起動時のみに動作させる(リロード対応)
     set columns=80 lines=48		" 84x26 より画面サイズを大きくする
