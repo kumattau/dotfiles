@@ -144,10 +144,19 @@ NeoBundle 'Shougo/vimproc', {
     \ 'unix'    : 'make -f make_unix.mak',
   \ },
 \ }
-NeoBundle 'Shougo/unite.vim'
+" ------------------------------------------------------------------------------
+" unite
+" ------------------------------------------------------------------------------
+NeoBundle 'Shougo/unite.vim', {'depends' : ['Shougo/vimproc']}
+nnoremap [unite]    <Nop>|			" unite ショートカット
+nmap     <Space>u [unite]|			" <Space>u で prefix
+nnoremap [unite]b :<C-u>Unite buffer<CR>|	" バッファ一覧を表示
+nnoremap [unite]g :<C-u>Unite grep:%<CR>|	" バッファを grep
+" ------------------------------------------------------------------------------
+" other plugins
+" ------------------------------------------------------------------------------
 NeoBundle 'Shougo/vimshell'
 NeoBundle 'tyru/open-browser.vim'
-NeoBundle 'kien/ctrlp.vim'
 NeoBundle 'tpope/vim-markdown'
 NeoBundle 'jtratner/vim-flavored-markdown'
 NeoBundle 'suan/vim-instant-markdown'
@@ -156,6 +165,12 @@ NeoBundle 'deton/jasegment.vim'			" 日本語の文節でWORD移動
 NeoBundle 'scrooloose/nerdcommenter'		" \c<Space> でコメント切り替え
 NeoBundle 'tpope/vim-surround'			" visualモードでS<文字>で囲む
 NeoBundle 'thinca/vim-qfreplace'		" quickfix で grep & replace
+NeoBundle 'Shougo/vinarise.vim'			" バイナリエディタ
+" ------------------------------------------------------------------------------
+" ctrlp
+" ------------------------------------------------------------------------------
+NeoBundle 'kien/ctrlp.vim'
+nnoremap <C-P> :<C-u>CtrlP<CR>|			" yankring と被るため大文字化
 " ------------------------------------------------------------------------------
 " appearance
 " ------------------------------------------------------------------------------
