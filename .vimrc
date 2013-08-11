@@ -214,14 +214,14 @@ let g:airline_theme='molokai'			" カラースキーマ
 " ------------------------------------------------------------------------------
 NeoBundle 'kana/vim-textobj-user'		" ベースプラグイン
 NeoBundle 'saihoooooooo/vim-textobj-space'	" aS  iS  連続スペース
-NeoBundle 'mattn/vim-textobj-cell'		" ac  ic  前後スペースを除く行
 NeoBundle 'kana/vim-textobj-entire'		" ae  ie  バッファ全体
 NeoBundle 'thinca/vim-textobj-between'		" af  if  任意の文字の囲み
 NeoBundle 'kana/vim-textobj-line'		" al  il  カーソル行
 NeoBundle 'deton/textobj-mbboundary.vim'	" am  im  ASCIIとmultibyteの境界
-NeoBundle 'osyo-manga/vim-textobj-multiblock'	" asb isb 任意の複数カッコ
+NeoBundle 'osyo-manga/vim-textobj-multiblock'	" asb isb 任意の複数カッコ(囲み)
 NeoBundle 'mattn/vim-textobj-url'		" au  iu  URL
 NeoBundle 'kana/vim-textobj-syntax'		" ay  iy  シンタックス
+" NeoBundle 'mattn/vim-textobj-cell'		" ac  ic  前後スペースを除く行?
 " NeoBundle 'kana/vim-textobj-function'		" af  if  関数
 " NeoBundle 'sgur/vim-textobj-parameter'	" a,  i,  関数の引数
 " NeoBundle 'h1mesuke/textobj-wiw'		" a,w i,w snake_case 上の word
