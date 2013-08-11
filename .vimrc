@@ -10,6 +10,9 @@
 " * オプションの設定方法
 "   * http://vim-users.jp/2009/05/hack5/)
 " * map (キーマップ変更) はタブや空白が意味を持つので"|"で終端させる
+" * autocmd は augroup vimrc で適用範囲を限定する
+" * option を参照するときは &option
+" * 変数で '~/' を HOME に展開したい場合、expand('~/') で記述
 "
 " ------------------------------------------------------------------------------
 set nocompatible			" vi 非互換(宣言)
@@ -52,9 +55,28 @@ set hidden				" バッファを閉じずに隠す(Undo履歴を残す)
 set switchbuf=useopen			" 新しく開く代わりに既存バッファを開く
 set backspace=indent,eol,start		" バックスペースで何でも消せるようにする
 set textwidth=0				" 自動的に改行が入るのを無効化
+if has("unix")
+  cnoremap w!! w !sudo tee % >/dev/null|" sudo root して保存 (for unix only)
+endif
+" ------------------------------------------------------------------------------
+" undo/backup/swap/book/hist
+" ------------------------------------------------------------------------------
 if has("persistent_undo")
   set undofile				" 可能なら undo 履歴を永続的に保存する
+  set undodir=~/.vim_undo		" undoファイルを.vim_undoににまとめる
+  if !isdirectory(&undodir)		" ディレクトリがなかったら作成する
+    call mkdir(&undodir, "p")
+  endif
 endif
+set backupdir=~/.vim_backup		" ~xxxを.vim_backupにまとめる
+if !isdirectory(&backupdir)		" ディレクトリがなかったら作成する
+  call mkdir(&backupdir, "p")
+endif
+set directory=~/.vim_swapfile		" .xxx.swpを.vim_swapfileにまとめる
+if !isdirectory(&directory)		" ディレクトリがなかったら作成する
+  call mkdir(&directory, "p")
+endif
+let g:netrw_home=expand('~/')		" .netrw{book,hist} を HOME に保存する
 " ------------------------------------------------------------------------------
 " ascii escape provision
 " ------------------------------------------------------------------------------
@@ -62,13 +84,6 @@ nnoremap OA gi<Up>|			" 上矢印を有効に
 nnoremap OB gi<Down>|			" 下矢印を有効に
 nnoremap OC gi<Right>|			" 右矢印を有効に
 nnoremap OD gi<Left>|			" 左矢印を有効に
-" ------------------------------------------------------------------------------
-" disable old vi function
-" ------------------------------------------------------------------------------
-set nobackup				" ~xxxを作成しない
-set noswapfile				" .xxx.swpを作成しない
-" ベル無効化 (Vim 起動後に設定することで CUI/GUI の両方に対応させている)
-autocmd vimrc VimEnter * set visualbell t_vb=
 " ------------------------------------------------------------------------------
 " statusline
 " ------------------------------------------------------------------------------
@@ -145,20 +160,27 @@ NeoBundle 'tpope/vim-surround'			" visualモードでS<文字>で囲む
 " ------------------------------------------------------------------------------
 syntax on					" カラー表示
 set t_Co=256					" ターミナルで256色対応
-" NeoBundle 'vim-scripts/trailing-whitespace'	" trailing-whitespace を赤色表示
+" ベル無効化 (Vim 起動後に設定することで CUI/GUI の両方に対応させている)
+autocmd vimrc VimEnter * set visualbell t_vb=
+NeoBundle 'tomasr/molokai'
 NeoBundle 'Pychimp/vim-luna'
 NeoBundle 'Shougo/neobundle.vim'
 NeoBundle 'altercation/vim-colors-solarized'
 NeoBundle 'baskerville/bubblegum'
 NeoBundle 'chriskempson/vim-tomorrow-theme'
 NeoBundle 'wombat256.vim'
+colorscheme Tomorrow-Night-Eighties		" pop な配色
+" colorscheme molokai				" pop な配色
+" let g:molokaki_original=1
+" let g:rehash256=1
+" set background=dark
 " colorscheme bubblegum				" 淡い配色
 " colorscheme luna				" pop な配色
 " colorscheme wombat256mod			" 256色対応 wombat
 " colorscheme solarized				" solarized
 " let g:solarized_termcolors=256		" 256色対応
 " let g:solarized_contrast="high"		" コントラストを高めに
-colorscheme Tomorrow-Night-Eighties		" pop な配色
+" NeoBundle 'vim-scripts/trailing-whitespace'	" trailing-whitespace を赤色表示
 set list listchars=tab:»\ ,trail:˷,nbsp:▫	" 不可視文字を可視化
 set cursorline 					" カーソル行ハイライト
 highlight CursorLine gui=underline guifg=NONE guibg=NONE
@@ -185,7 +207,7 @@ nnoremap <silent> [appr]s :<C-u>call g:my_toggle_syntax()<CR>|	" syntax トグ�
 NeoBundle 'bling/vim-airline'			" かっこいいステーラスライン(new)
 let g:airline_left_sep=''			" fontパッチを当ててないので
 let g:airline_right_sep=''			" 左右のセパレータを削除する
-let g:airline_theme='tomorrow'			" 全体のカラースキーマに合わせる
+let g:airline_theme='molokai'			" カラースキーマ
 " ------------------------------------------------------------------------------
 " Input Method Control
 " ------------------------------------------------------------------------------
