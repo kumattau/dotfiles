@@ -37,7 +37,7 @@ nnoremap [vimrc]h :<C-u>helpgrep<Space>|	" <Space>vh で help を検索する
 set ignorecase					" 大文字/小文字を区別しない
 set smartcase					" 大文字があるときだけ区別
 set incsearch					" インクリメンタルサーチ
-set nowrapscan					" ファイルの先頭へループしない
+set wrapscan					" ファイルの先頭へループする
 set hlsearch					" 検索文字をハイライトする
 nnoremap <Esc><Esc> :<C-u>nohlsearch<CR><Esc>|	" Esc 連打でハイライト無効
 " ------------------------------------------------------------------------------
@@ -170,6 +170,12 @@ NeoBundle 'scrooloose/nerdcommenter'		" \c<Space> でコメント切り替え
 NeoBundle 'tpope/vim-surround'			" visualモードでS<文字>で囲む
 NeoBundle 'thinca/vim-qfreplace'		" quickfix で grep & replace
 NeoBundle 'Shougo/vinarise.vim'			" バイナリエディタ
+" ------------------------------------------------------------------------------
+" eregex
+" ------------------------------------------------------------------------------
+NeoBundle 'othree/eregex.vim'			" perl互換の正規表現 (M/,%S)
+let g:eregex_default_enable=0			" デフォルトで上書きしない
+			" デフォルトで上書きしない
 " ------------------------------------------------------------------------------
 " ctrlp
 " ------------------------------------------------------------------------------
