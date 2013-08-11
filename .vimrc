@@ -362,11 +362,12 @@ endfunction
 function! g:ref_source_webdict_sites.wiki.filter(output)
   return join(split(a:output, "\n")[17:], "\n")
 endfunction
-" ショートカット
-nnoremap <Leader>rj :<C-u>Ref webdict je<Space>|	" \rj で和英
-nnoremap <Leader>re :<C-u>Ref webdict ej<Space>|	" \re で英和
-nnoremap <Leader>ra :<C-u>Ref webdict alc<Space>|	" \ra で alc
-nnoremap <Leader>rw :<C-u>Ref webdict wiki<Space>|	" \rw でwikipedia
+nnoremap [ref] <Nop>|					" Ref ショートカット
+nmap     <Space>r [ref]|				" <Space>r で prefix
+nnoremap [ref]rj :<C-u>Ref webdict je<Space>|		" <Space>rj で和英
+nnoremap [ref]re :<C-u>Ref webdict ej<Space>|		" <Space>re で英和
+nnoremap [ref]ra :<C-u>Ref webdict alc<Space>|		" <Space>ra で alc
+nnoremap [ref]rw :<C-u>Ref webdict wiki<Space>|		" <Space>rw でwikipedia
 " <Space>K で webdict (alc) で検索 (visual/normal 両対応)
 nnoremap <silent> <Space>K :<C-u>call ref#jump('normal', 'webdict')<CR>
 vnoremap <silent> <Space>K :<C-u>call ref#jump('visual', 'webdict')<CR>
