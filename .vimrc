@@ -155,6 +155,7 @@ NeoBundle 'vim-jp/vimdoc-ja'			" 日本語ヘルプ
 NeoBundle 'deton/jasegment.vim'			" 日本語の文節でWORD移動
 NeoBundle 'scrooloose/nerdcommenter'		" \c<Space> でコメント切り替え
 NeoBundle 'tpope/vim-surround'			" visualモードでS<文字>で囲む
+NeoBundle 'thinca/vim-qfreplace'		" quickfix で grep & replace
 " ------------------------------------------------------------------------------
 " appearance
 " ------------------------------------------------------------------------------
@@ -208,6 +209,23 @@ NeoBundle 'bling/vim-airline'			" かっこいいステーラスライン(new)
 let g:airline_left_sep=''			" fontパッチを当ててないので
 let g:airline_right_sep=''			" 左右のセパレータを削除する
 let g:airline_theme='molokai'			" カラースキーマ
+" ------------------------------------------------------------------------------
+" textobj
+" ------------------------------------------------------------------------------
+NeoBundle 'kana/vim-textobj-user'		" ベースプラグイン
+NeoBundle 'saihoooooooo/vim-textobj-space'	" aS  iS  連続スペース
+NeoBundle 'mattn/vim-textobj-cell'		" ac  ic  前後スペースを除く行
+NeoBundle 'kana/vim-textobj-entire'		" ae  ie  バッファ全体
+NeoBundle 'thinca/vim-textobj-between'		" af  if  任意の文字の囲み
+NeoBundle 'kana/vim-textobj-line'		" al  il  カーソル行
+NeoBundle 'deton/textobj-mbboundary.vim'	" am  im  ASCIIとmultibyteの境界
+NeoBundle 'osyo-manga/vim-textobj-multiblock'	" asb isb 任意の複数カッコ
+NeoBundle 'mattn/vim-textobj-url'		" au  iu  URL
+NeoBundle 'kana/vim-textobj-syntax'		" ay  iy  シンタックス
+" NeoBundle 'kana/vim-textobj-function'		" af  if  関数
+" NeoBundle 'sgur/vim-textobj-parameter'	" a,  i,  関数の引数
+" NeoBundle 'h1mesuke/textobj-wiw'		" a,w i,w snake_case 上の word
+" NeoBundle 'thinca/vim-textobj-comment'	" ac  ic  コメント
 " ------------------------------------------------------------------------------
 " Input Method Control
 " ------------------------------------------------------------------------------
