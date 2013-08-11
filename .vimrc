@@ -13,7 +13,7 @@
 " * autocmd は augroup vimrc で適用範囲を限定する
 " * option を参照するときは &option
 " * 変数で '~/' を HOME に展開したい場合、expand('~/') で記述
-"
+" * <C-u> で範囲(:'<,'>)キャンセル
 " ------------------------------------------------------------------------------
 set nocompatible			" vi 非互換(宣言)
 scriptencoding utf-8			" vimrcのエンコーディング
@@ -335,7 +335,7 @@ let g:quickrun_config = {
 " gundo
 " ------------------------------------------------------------------------------
 NeoBundle 'sjl/gundo.vim'			" git reflog のような履歴管理
-nnoremap <Leader>g :<C-u>GundoToggle<CR>|		" \g でトグル
+nnoremap <Leader>g :<C-u>GundoToggle<CR>|	" \g でトグル
 " ------------------------------------------------------------------------------
 " vim-ref (man, pydoc, webpage reference)
 " ------------------------------------------------------------------------------
