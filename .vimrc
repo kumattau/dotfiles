@@ -159,6 +159,7 @@ nnoremap [unite]g :<C-u>Unite grep:%<CR>|	" バッファを grep
 " ------------------------------------------------------------------------------
 " other plugins
 " ------------------------------------------------------------------------------
+NeoBundle 'ujihisa/neco-look'			" 英単語補完(require neocompl..)
 NeoBundle 'tyru/open-browser.vim'
 NeoBundle 'tpope/vim-markdown'
 NeoBundle 'jtratner/vim-flavored-markdown'
