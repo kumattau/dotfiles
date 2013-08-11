@@ -259,14 +259,14 @@ NeoBundle 'Shougo/vimshell', { 'depends': ['Shougo/vimproc'],
 \ 'autoload': {'commands': ['VimShellPop']}}
 let g:vimshell_prompt_expr='getcwd()." > "'	" プロンプトにcurrentdirを表示
 let g:vimshell_prompt_pattern='^\f\+ > '	" プロンプトにcurrentdirを表示
-nnoremap <Leader>E :<C-u>VimShellPop<CR>|		" \E でシェルを開く
+nnoremap <Leader>E :<C-u>VimShellPop<CR>|	" \E でシェルを開く
 " ------------------------------------------------------------------------------
 " vimfiler
 " ------------------------------------------------------------------------------
 NeoBundle 'Shougo/vimfiler', { 'depends': ['Shougo/unite.vim'],
 \ 'autoload': {'commands': ['VimFilerExplorer']}}
-nnoremap <Leader>e :<C-u>VimFilerExplorer<CR>|	" \e でファイラを開く
 let g:vimfiler_safe_mode_by_default=0		" safe mode を無効にして開く
+nnoremap <Leader>e :<C-u>VimFilerExplorer<CR>|	" \e でファイラを開く
 " ------------------------------------------------------------------------------
 " YankRing
 " ------------------------------------------------------------------------------
@@ -283,7 +283,7 @@ nnoremap [yankring]s :<C-u>YRSearch<Space>|	" <space>ys で Ring 検索
 " ------------------------------------------------------------------------------
 if has('lua') && ((v:version >= 704) || (v:version >= 703 && has('patch885')))
   NeoBundleLazy 'Shougo/neocomplete.vim', {'autoload': {'insert': 1}}
-  let g:neocomplete#enable_at_startup=1			"  起動時に有効化
+  let g:neocomplete#enable_at_startup=1			" 起動時に有効化
   let s:hooks = neobundle#get_hooks("neocomplete.vim")
   function! s:hooks.on_source(bundle)
     " let g:neocomplete#auto_completion_start_length=9	" 自動補完を抑止(通常2)
@@ -329,7 +329,7 @@ endfunction
 " ------------------------------------------------------------------------------
 NeoBundle 'thinca/vim-quickrun'			" \r で script 実行(非同期)
 let g:quickrun_config = {
-\  '_' : {'runmode': 'async:remote:vimproc'},
+\ '_' : {'runmode': 'async:remote:vimproc'},
 \}						" 非同期実行 (require vimproc)
 " ------------------------------------------------------------------------------
 " gundo
@@ -342,10 +342,10 @@ nnoremap <Leader>g :<C-u>GundoToggle<CR>|	" \g でトグル
 NeoBundle 'thinca/vim-ref'
 " webdict サイト定義
 let g:ref_source_webdict_sites = {
-\  'je'  : { 'url': 'http://dictionary.infoseek.ne.jp/jeword/%s' },
-\  'ej'  : { 'url': 'http://dictionary.infoseek.ne.jp/ejword/%s' },
-\  'wiki': { 'url': 'http://ja.wikipedia.org/wiki/%s'            },
-\  'alc' : { 'url': 'http://eow.alc.co.jp/%s/UTF-8/'             },
+\ 'je'  : {'url': 'http://dictionary.infoseek.ne.jp/jeword/%s'},
+\ 'ej'  : {'url': 'http://dictionary.infoseek.ne.jp/ejword/%s'},
+\ 'wiki': {'url': 'http://ja.wikipedia.org/wiki/%s'           },
+\ 'alc' : {'url': 'http://eow.alc.co.jp/%s/UTF-8/'            },
 \}
 let g:ref_source_webdict_sites.default = 'alc'	" デフォルトサイト
 let g:ref_source_webdict_cmd = 'w3m -dump %s'	" w3m で出力(lynxより見やすい)
