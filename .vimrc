@@ -26,20 +26,20 @@ augroup END
 " ------------------------------------------------------------------------------
 " effective vim customize
 " ------------------------------------------------------------------------------
-nnoremap [vimrc] <Nop>|			" vim 設定ショートカット
-nmap     <Space>v [vimrc]|		" <Space>v で prefix
-nnoremap [vimrc]e :edit $MYVIMRC<CR>|	" <Space>ve で vimrc を開く
-nnoremap [vimrc]s :source $MYVIMRC<CR>|	" <Space>vs で vimrc を再読み込み
-nnoremap [vimrc]h :helpgrep<Space>|	" <Space>vh で help を検索する
+nnoremap [vimrc] <Nop>|				" vim 設定ショートカット
+nmap     <Space>v [vimrc]|			" <Space>v で prefix
+nnoremap [vimrc]e :<C-u>edit $MYVIMRC<CR>|	" <Space>ve で vimrc を開く
+nnoremap [vimrc]s :<C-u>source $MYVIMRC<CR>|	" <Space>vs で vimrc を再読み込み
+nnoremap [vimrc]h :<C-u>helpgrep<Space>|	" <Space>vh で help を検索する
 " ------------------------------------------------------------------------------
 " search
 " ------------------------------------------------------------------------------
-set ignorecase				" 大文字/小文字を区別しない
-set smartcase				" 大文字があるときだけ区別
-set incsearch				" インクリメンタルサーチ
-set nowrapscan				" ファイルの先頭へループしない
-set hlsearch				" 検索文字をハイライトする
-nmap <Esc><Esc> :nohlsearch<CR><Esc>|	" Esc 連打でハイライト無効
+set ignorecase					" 大文字/小文字を区別しない
+set smartcase					" 大文字があるときだけ区別
+set incsearch					" インクリメンタルサーチ
+set nowrapscan					" ファイルの先頭へループしない
+set hlsearch					" 検索文字をハイライトする
+nnoremap <Esc><Esc> :<C-u>nohlsearch<CR><Esc>|	" Esc 連打でハイライト無効
 " ------------------------------------------------------------------------------
 " display
 " ------------------------------------------------------------------------------
@@ -155,7 +155,6 @@ nnoremap [unite]g :<C-u>Unite grep:%<CR>|	" バッファを grep
 " ------------------------------------------------------------------------------
 " other plugins
 " ------------------------------------------------------------------------------
-NeoBundle 'Shougo/vimshell'
 NeoBundle 'tyru/open-browser.vim'
 NeoBundle 'tpope/vim-markdown'
 NeoBundle 'jtratner/vim-flavored-markdown'
@@ -170,7 +169,7 @@ NeoBundle 'Shougo/vinarise.vim'			" バイナリエディタ
 " ctrlp
 " ------------------------------------------------------------------------------
 NeoBundle 'kien/ctrlp.vim'
-nnoremap <C-P> :<C-u>CtrlP<CR>|			" yankring と被るため大文字化
+nnoremap <silent> <Space><C-p> :<C-u>CtrlP<CR>|	" yankringと被るため<Space>追加
 " ------------------------------------------------------------------------------
 " appearance
 " ------------------------------------------------------------------------------
@@ -178,13 +177,13 @@ syntax on					" カラー表示
 set t_Co=256					" ターミナルで256色対応
 " ベル無効化 (Vim 起動後に設定することで CUI/GUI の両方に対応させている)
 autocmd vimrc VimEnter * set visualbell t_vb=
-NeoBundle 'tomasr/molokai'
-NeoBundle 'Pychimp/vim-luna'
-NeoBundle 'Shougo/neobundle.vim'
-NeoBundle 'altercation/vim-colors-solarized'
-NeoBundle 'baskerville/bubblegum'
+" NeoBundle 'tomasr/molokai'
+" NeoBundle 'Pychimp/vim-luna'
+" NeoBundle 'Shougo/neobundle.vim'
+" NeoBundle 'altercation/vim-colors-solarized'
+" NeoBundle 'baskerville/bubblegum'
+" NeoBundle 'wombat256.vim'
 NeoBundle 'chriskempson/vim-tomorrow-theme'
-NeoBundle 'wombat256.vim'
 colorscheme Tomorrow-Night-Eighties		" pop な配色
 " colorscheme molokai				" pop な配色
 " let g:molokaki_original=1
@@ -213,9 +212,9 @@ function! g:my_toggle_syntax()
 endfunction
 nnoremap [appr] <Nop>|				" appr 設定ショートカット
 nmap     <Space>a [appr]|			" <Space>a で prefix
-nnoremap <silent> [appr]l :set list!<CR>|	" カーソルトグル
-nnoremap <silent> [appr]c :set cursorline!<CR>| " 不可視文字トグル
-nnoremap <silent> [appr]s :<C-u>call g:my_toggle_syntax()<CR>|	" syntax トグル
+nnoremap <silent> [appr]l :<C-u>set list!<CR>|			" カーソル
+nnoremap <silent> [appr]c :<C-u>set cursorline!<CR>| 		" 不可視文字
+nnoremap <silent> [appr]s :<C-u>call g:my_toggle_syntax()<CR>|	" syntax
 " ------------------------------------------------------------------------------
 " pretty status line
 " ------------------------------------------------------------------------------
@@ -254,10 +253,19 @@ let IM_CtrlIBusPython=1				" PythonによるIBus制御指定
 NeoBundle 'vim-scripts/Align'			" テーブルやソースコードの整形
 let g:Align_xstrlen=3				" 日本語対応 (不完全らしい)
 " ------------------------------------------------------------------------------
+" vimshell
+" ------------------------------------------------------------------------------
+NeoBundle 'Shougo/vimshell', { 'depends': ['Shougo/vimproc'],
+\ 'autoload': {'commands': ['VimShellPop']}}
+let g:vimshell_prompt_expr='getcwd()." > "'	" プロンプトにcurrentdirを表示
+let g:vimshell_prompt_pattern='^\f\+ > '	" プロンプトにcurrentdirを表示
+nnoremap <Leader>E :<C-u>VimShellPop<CR>|		" \E でシェルを開く
+" ------------------------------------------------------------------------------
 " vimfiler
 " ------------------------------------------------------------------------------
-NeoBundle 'Shougo/vimfiler', {'depends' : ['Shougo/unite.vim']}
-nnoremap <Leader>e :VimFilerExplorer<CR>|	" \e でファイラを開く
+NeoBundle 'Shougo/vimfiler', { 'depends': ['Shougo/unite.vim'],
+\ 'autoload': {'commands': ['VimFilerExplorer']}}
+nnoremap <Leader>e :<C-u>VimFilerExplorer<CR>|	" \e でファイラを開く
 let g:vimfiler_safe_mode_by_default=0		" safe mode を無効にして開く
 " ------------------------------------------------------------------------------
 " YankRing
@@ -267,9 +275,9 @@ let g:yankring_history_file='.yankring' 	" 履歴を隠しファイルに
 set clipboard& clipboard+=unnamedplus,unnamed	" Yank でクリップボードへコピー
 nnoremap [yankring] <Nop>|			" YankRing ショートカット
 nmap     <Space>y [yankring]|			" <Space>y で prefix
-nnoremap [yankring]l :YRShow<CR>|		" <Space>yl で Ring 一覧
-nnoremap [yankring]c :YRClear<CR>|		" <Space>yc で Ring 削除
-nnoremap [yankring]s :YRSearch<Space>|		" <space>ys で Ring 検索
+nnoremap [yankring]l :<C-u>YRShow<CR>|		" <Space>yl で Ring 一覧
+nnoremap [yankring]c :<C-u>YRClear<CR>|		" <Space>yc で Ring 削除
+nnoremap [yankring]s :<C-u>YRSearch<Space>|	" <space>ys で Ring 検索
 " ------------------------------------------------------------------------------
 " neocomplete/neocomplcache
 " ------------------------------------------------------------------------------
@@ -327,7 +335,7 @@ let g:quickrun_config = {
 " gundo
 " ------------------------------------------------------------------------------
 NeoBundle 'sjl/gundo.vim'			" git reflog のような履歴管理
-nnoremap <Leader>g :GundoToggle<CR>|		" \g でトグル
+nnoremap <Leader>g :<C-u>GundoToggle<CR>|		" \g でトグル
 " ------------------------------------------------------------------------------
 " vim-ref (man, pydoc, webpage reference)
 " ------------------------------------------------------------------------------
