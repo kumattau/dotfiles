@@ -29,7 +29,7 @@ augroup END
 nnoremap [vimrc] <Nop>|				" vim 設定ショートカット
 nmap     <Space>v [vimrc]|			" <Space>v で prefix
 nnoremap [vimrc]e :<C-u>edit $MYVIMRC<CR>|	" <Space>ve で vimrc を開く
-nnoremap [vimrc]s :<C-u>source $MYVIMRC<CR>|	" <Space>vs で vimrc を再読み込み
+nnoremap [vimrc]s :<C-u>source $MYVIMRC<CR>|	" <Space>vs で vimrc を再読込
 nnoremap [vimrc]h :<C-u>helpgrep<Space>|	" <Space>vh で help を検索する
 " ------------------------------------------------------------------------------
 " search
