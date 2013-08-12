@@ -160,10 +160,6 @@ nnoremap [unite]g :<C-u>Unite grep:%<CR>|	" バッファを grep
 " other plugins
 " ------------------------------------------------------------------------------
 NeoBundle 'ujihisa/neco-look'			" 英単語補完(require neocompl..)
-NeoBundle 'tyru/open-browser.vim'
-NeoBundle 'tpope/vim-markdown'
-NeoBundle 'jtratner/vim-flavored-markdown'
-NeoBundle 'suan/vim-instant-markdown'
 NeoBundle 'vim-jp/vimdoc-ja'			" 日本語ヘルプ
 NeoBundle 'deton/jasegment.vim'			" 日本語の文節でWORD移動
 NeoBundle 'scrooloose/nerdcommenter'		" \c<Space> でコメント切り替え
@@ -175,7 +171,6 @@ NeoBundle 'Shougo/vinarise.vim'			" バイナリエディタ
 " ------------------------------------------------------------------------------
 NeoBundle 'othree/eregex.vim'			" perl互換の正規表現 (M/,%S)
 let g:eregex_default_enable=0			" デフォルトで上書きしない
-			" デフォルトで上書きしない
 " ------------------------------------------------------------------------------
 " ctrlp
 " ------------------------------------------------------------------------------
@@ -255,9 +250,9 @@ NeoBundle 'kana/vim-textobj-syntax'		" ay  iy  シンタックス
 " Input Method Control
 " ------------------------------------------------------------------------------
 " NeoBundle 'vim-scripts/fcitx.vim'		" normalモードでIM(fcitx) OFF
-NeoBundle 'fuenor/im_control.vim'		" normalモードでIM(ibus等) OFF
-inoremap <silent> <C-j> <C-r>=IMState('FixMode')<CR>| "<C-j> で日本語切り替え
-let IM_CtrlIBusPython=1				" PythonによるIBus制御指定
+" NeoBundle 'fuenor/im_control.vim'		" normalモードでIM(ibus等) OFF
+" inoremap <silent> <C-j> <C-r>=IMState('FixMode')<CR>| "<C-j> で日本語切り替え
+" let IM_CtrlIBusPython=1			" PythonによるIBus制御指定
 " ------------------------------------------------------------------------------
 " Algin
 " ------------------------------------------------------------------------------
@@ -268,9 +263,10 @@ let g:Align_xstrlen=3				" 日本語対応 (不完全らしい)
 " ------------------------------------------------------------------------------
 NeoBundle 'Shougo/vimshell', { 'depends': ['Shougo/vimproc'],
 \ 'autoload': {'commands': ['VimShellPop']}}
-let g:vimshell_prompt_expr='getcwd()." > "'	" プロンプトにcurrentdirを表示
-let g:vimshell_prompt_pattern='^\f\+ > '	" プロンプトにcurrentdirを表示
-nnoremap <Leader>E :<C-u>VimShellPop<CR>|	" \E でシェルを開く
+let g:vimshell_prompt_expr =
+\ 'escape(fnamemodify(getcwd(), ":~").">", "\\[]()?! ")." "'
+let g:vimshell_prompt_pattern = '^\%(\f\|\\.\)\+> '
+nnoremap <Leader>s :<C-u>VimShellPop<CR>|	" \s でシェルを開く
 " ------------------------------------------------------------------------------
 " vimfiler
 " ------------------------------------------------------------------------------
@@ -385,19 +381,28 @@ vnoremap <silent> <Space>K :<C-u>call ref#jump('visual', 'webdict')<CR>
 " ------------------------------------------------------------------------------
 " vim-jedi (python code completion)
 " ------------------------------------------------------------------------------
-NeoBundleLazy 'davidhalter/jedi-vim', {'autoload': {'filetypes': ['python']}}
-let g:jedi#auto_initialize=0			" 自動初期化
-let g:jedi#auto_vim_configuration=0		" preview抑止のため自動設定無効
-let g:jedi#popup_select_first=0			" 最初の候補を選択しない
-let g:jedi#popup_on_dot=0			" .(dot)でpopupさせない
-let g:jedi#rename_command='<Leader>R'		" quickrunと被るため大文字(\R)に
-let g:jedi#goto_command='<Leader>G'		" gundoと被るため大文字(\G)に
+" NeoBundleLazy 'davidhalter/jedi-vim', {'autoload': {'filetypes': ['python']}}
+" let g:jedi#auto_initialize=0			" 自動初期化
+" let g:jedi#auto_vim_configuration=0		" preview抑止のため自動設定無効
+" let g:jedi#popup_select_first=0		" 最初の候補を選択しない
+" let g:jedi#popup_on_dot=0			" .(dot)でpopupさせない
+" let g:jedi#rename_command='<Leader>R'		" quickrunと被るため大文字(\R)に
+" let g:jedi#goto_command='<Leader>G'		" gundoと被るため大文字(\G)に
 " ------------------------------------------------------------------------------
 " multi-lang/python syntax checker
 " ------------------------------------------------------------------------------
-NeoBundle 'scrooloose/syntastic'		" live multi-lang syntax checker
-let g:syntastic_enable_signs=0			" 左端 tips (ガタつくので非表示)
+" NeoBundle 'scrooloose/syntastic'		" live multi-lang syntax checker
+" let g:syntastic_enable_signs=0		" 左端 tips (ガタつくので非表示)
 " NeoBundle 'nvie/vim-flake8'			" static python syntax checker
+" ------------------------------------------------------------------------------
+" markdown
+" ------------------------------------------------------------------------------
+NeoBundle 'tpope/vim-markdown'			" markdown
+NeoBundle 'jtratner/vim-flavored-markdown'	" ghmarkdown (gfm format)
+NeoBundle 'tyru/open-browser.vim'		" browser opener
+NeoBundle 'kumattau/previm'			" markdown browswer preview
+autocmd vimrc BufNewFile,BufRead *.md,*.markdown,*.mdown,*.mkd,*.mkdn
+\ setlocal filetype=ghmarkdown			" ghmarkdown で開く
 
 filetype plugin indent on		" Required by Neobundle
 NeoBundleCheck				" Install Check by NeoBundle
