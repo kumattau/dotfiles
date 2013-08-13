@@ -19,7 +19,7 @@ set nocompatible			" vi 非互換(宣言)
 scriptencoding utf-8			" vimrcのエンコーディング
 set encoding=utf-8			" vim 内部のエンコーディグ
 set fileencoding=utf-8			" 既定のファイル保存エンコーディング
-set fileencodings=ucs-bom,iso-2022-jp-3,euc-jisx0213,euc-jp,cp932,utf-8
+set fileencodings=utf-8,ucs-bom,iso-2022-jp-3,euc-jisx0213,euc-jp,cp932
 " ------------------------------------------------------------------------------
 " reset vimrc autocmd group
 " ------------------------------------------------------------------------------
@@ -169,6 +169,7 @@ NeoBundle 'Shougo/vimproc', {
 NeoBundle 'Shougo/unite.vim', {'depends' : ['Shougo/vimproc']}
 nnoremap [unite]    <Nop>|			" unite ショートカット
 nmap     <Space>u [unite]|			" <Space>u で prefix
+nnoremap [unite]<Space> :<C-u>Unite |		" Unite のみ入力
 nnoremap [unite]b :<C-u>Unite buffer<CR>|	" バッファ一覧を表示
 nnoremap [unite]g :<C-u>Unite grep:%<CR>|	" バッファを grep
 " ------------------------------------------------------------------------------
@@ -287,8 +288,13 @@ nnoremap <Leader>s :<C-u>VimShellPop<CR>|	" \s でシェルを開く
 " ------------------------------------------------------------------------------
 NeoBundle 'Shougo/vimfiler', { 'depends': ['Shougo/unite.vim'],
 \ 'autoload': {'commands': ['VimFilerExplorer']}}
+let g:vimfiler_as_default_explorer=1		" デフォルトに設定
 let g:vimfiler_safe_mode_by_default=0		" safe mode を無効にして開く
-nnoremap <Leader>e :<C-u>VimFilerExplorer<CR>|	" \e でファイラを開く
+nnoremap [vimfiler]    <Nop>|			" vimfiler ショートカット
+nmap     <Space>f [vimfiler]|			" <Space>f で prefix
+nnoremap [vimfiler]b :<C-u>VimFilerBufferDir<CR>|
+nnoremap [vimfiler]c :<C-u>VimFilerCurrentDir<CR>|
+nnoremap [vimfiler]e :<C-u>VimFilerExplorer -horizontal<CR>|
 " ------------------------------------------------------------------------------
 " YankRing
 " ------------------------------------------------------------------------------
@@ -344,15 +350,19 @@ function! s:hooks.on_source(bundle)
   " Enable snipMate compatibility feature.
   let g:neosnippet#enable_snipmate_compatibility = 1
   " Tell Neosnippet about the other snippets
-  let g:neosnippet#snippets_directory='~/.vim/bundle/vim-snippets/snippets'
+  let g:neosnippet#snippets_directory=
+  \ '~/.vim/bundle/vim-snippets/snippets,~/.vim/snippets'
 endfunction
 " ------------------------------------------------------------------------------
 " quickrun
 " ------------------------------------------------------------------------------
 NeoBundle 'thinca/vim-quickrun'			" \r で script 実行(非同期)
-let g:quickrun_config = {
-\ '_' : {'runmode': 'async:remote:vimproc'},
-\}						" 非同期実行 (require vimproc)
+let g:quickrun_config = {}
+let g:quickrun_config['_'] =
+\ {'runmode': 'async:remote:vimproc' }		" vimproc で非同期実行
+let g:quickrun_config['ghmarkdown'] =
+\ {'type': 'markdown/pandoc', 'outputter': 'browser',
+\  'cmdopt': '-s -c ~/.vim/misc/markdown.css --self-contained'}
 " ------------------------------------------------------------------------------
 " gundo
 " ------------------------------------------------------------------------------
