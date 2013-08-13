@@ -122,11 +122,12 @@ set wildmode=list:longest		" 全マッチを列挙し最長の文字列まで補
 " indent
 " ------------------------------------------------------------------------------
 set tabstop=8				" 互換のためタブは8文字のままにしておく
-autocmd vimrc FileType c       setlocal           shiftwidth=8 softtabstop=8
-autocmd vimrc FileType sh      setlocal expandtab shiftwidth=2 softtabstop=2
-autocmd vimrc FileType awk     setlocal expandtab shiftwidth=2 softtabstop=2
-autocmd vimrc FileType python  setlocal expandtab shiftwidth=4 softtabstop=4
-autocmd vimrc FileType fortran setlocal expandtab shiftwidth=2 softtabstop=2
+autocmd vimrc FileType c          setlocal           shiftwidth=8 softtabstop=8
+autocmd vimrc FileType sh         setlocal expandtab shiftwidth=2 softtabstop=2
+autocmd vimrc FileType awk        setlocal expandtab shiftwidth=2 softtabstop=2
+autocmd vimrc FileType python     setlocal expandtab shiftwidth=4 softtabstop=4
+autocmd vimrc FileType fortran    setlocal expandtab shiftwidth=2 softtabstop=2
+autocmd vimrc FileType javascript setlocal expandtab shiftwidth=2 softtabstop=2
 " ------------------------------------------------------------------------------
 " fortran specific
 " ------------------------------------------------------------------------------
