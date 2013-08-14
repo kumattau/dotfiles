@@ -107,10 +107,10 @@ nnoremap <C-h> <C-w>h|			" Ctrl + hjkl でウィンドウ間を移動
 nnoremap <C-j> <C-w>j|			" Ctrl + hjkl でウィンドウ間を移動
 nnoremap <C-k> <C-w>k|			" Ctrl + hjkl でウィンドウ間を移動
 nnoremap <C-l> <C-w>l|			" Ctrl + hjkl でウィンドウ間を移動
-nnoremap <S-Left>  <C-w>><CR>|		" Shift + 矢印でウィンドウサイズを変更
-nnoremap <S-Right> <C-w><<CR>|		" Shift + 矢印でウィンドウサイズを変更
-nnoremap <S-Up>    <C-w>+<CR>|		" Shift + 矢印でウィンドウサイズを変更
-nnoremap <S-Down>  <C-w>-<CR>|		" Shift + 矢印でウィンドウサイズを変更
+nnoremap <C-Left>  <C-w><<CR>|		" Shift + 矢印でウィンドウサイズを変更
+nnoremap <C-Right> <C-w>><CR>|		" Shift + 矢印でウィンドウサイズを変更
+nnoremap <C-Up>    <C-w>-<CR>|		" Shift + 矢印でウィンドウサイズを変更
+nnoremap <C-Down>  <C-w>+<CR>|		" Shift + 矢印でウィンドウサイズを変更
 nnoremap < :bp<CR>|			" < でバッファを戻る
 nnoremap > :bn<CR>|			" > でバッファを進む
 " ------------------------------------------------------------------------------
@@ -125,6 +125,7 @@ set tabstop=8				" 互換のためタブは8文字のままにしておく
 autocmd vimrc FileType c          setlocal           shiftwidth=8 softtabstop=8
 autocmd vimrc FileType sh         setlocal expandtab shiftwidth=2 softtabstop=2
 autocmd vimrc FileType awk        setlocal expandtab shiftwidth=2 softtabstop=2
+autocmd vimrc FileType html       setlocal expandtab shiftwidth=2 softtabstop=2
 autocmd vimrc FileType python     setlocal expandtab shiftwidth=4 softtabstop=4
 autocmd vimrc FileType fortran    setlocal expandtab shiftwidth=2 softtabstop=2
 autocmd vimrc FileType javascript setlocal expandtab shiftwidth=2 softtabstop=2
@@ -172,6 +173,7 @@ nnoremap [unite]    <Nop>|			" unite ショートカット
 nmap     <Space>u [unite]|			" <Space>u で prefix
 nnoremap [unite]<Space> :<C-u>Unite |		" Unite のみ入力
 nnoremap [unite]b :<C-u>Unite buffer<CR>|	" バッファ一覧を表示
+nnoremap [unite]f :<C-u>Unite find<CR>|		" find
 nnoremap [unite]g :<C-u>Unite grep:%<CR>|	" バッファを grep
 " ------------------------------------------------------------------------------
 " other plugins
@@ -364,6 +366,8 @@ let g:quickrun_config['_'] =
 let g:quickrun_config['ghmarkdown'] =
 \ {'type': 'markdown/pandoc', 'outputter': 'browser',
 \  'cmdopt': '-s -c ~/.vim/misc/markdown.css --self-contained'}
+let g:quickrun_config['html'] =
+\ {'command': 'cat', 'exec': ['%c %s'], 'outputter': 'browser'}
 " ------------------------------------------------------------------------------
 " gundo
 " ------------------------------------------------------------------------------
@@ -405,6 +409,13 @@ nnoremap [ref]rw :<C-u>Ref webdict wiki<Space>|		" <Space>rw でwikipedia
 nnoremap <silent> <Space>K :<C-u>call ref#jump('normal', 'webdict')<CR>
 vnoremap <silent> <Space>K :<C-u>call ref#jump('visual', 'webdict')<CR>
 " ------------------------------------------------------------------------------
+" html
+" ------------------------------------------------------------------------------
+NeoBundle 'othree/html5.vim'			" html5 completion
+NeoBundle 'hail2u/vim-css3-syntax'		" css syntax highlight
+NeoBundle 'mattn/zencoding-vim'			" effective html coding
+NeoBundle 'taichouchou2/vim-javascript'		" javascript syntax highlight
+" ------------------------------------------------------------------------------
 " vim-jedi (python code completion)
 " ------------------------------------------------------------------------------
 " NeoBundleLazy 'davidhalter/jedi-vim', {'autoload': {'filetypes': ['python']}}
@@ -423,12 +434,18 @@ vnoremap <silent> <Space>K :<C-u>call ref#jump('visual', 'webdict')<CR>
 " ------------------------------------------------------------------------------
 " markdown
 " ------------------------------------------------------------------------------
+NeoBundle 'tyru/open-browser.vim'		" browser opener
 NeoBundle 'tpope/vim-markdown'			" markdown
 NeoBundle 'jtratner/vim-flavored-markdown'	" ghmarkdown (gfm format)
-NeoBundle 'tyru/open-browser.vim'		" browser opener
 NeoBundle 'kumattau/previm'			" markdown browswer preview
 autocmd vimrc BufNewFile,BufRead *.md,*.markdown,*.mdown,*.mkd,*.mkdn
 \ setlocal filetype=ghmarkdown			" ghmarkdown で開く
+nnoremap <Leader>q :<C-u>PrevimOpen<CR>
+" ------------------------------------------------------------------------------
+" git
+" ------------------------------------------------------------------------------
+NeoBundle 'gregsexton/gitv'
+NeoBundle 'tpope/vim-fugitive'
 
 filetype plugin indent on		" Required by Neobundle
 NeoBundleCheck				" Install Check by NeoBundle
