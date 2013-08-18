@@ -182,10 +182,12 @@ nnoremap [unite]g :<C-u>Unite grep:%<CR>|	" バッファを grep
 NeoBundle 'ujihisa/neco-look'			" 英単語補完(require neocompl..)
 NeoBundle 'vim-jp/vimdoc-ja'			" 日本語ヘルプ
 NeoBundle 'deton/jasegment.vim'			" 日本語の文節でWORD移動
-NeoBundle 'scrooloose/nerdcommenter'		" \c<Space> でコメント切り替え
+NeoBundle 'tomtom/tcomment_vim'			" gc,gcc でコメント切り替え
+" NeoBundle 'scrooloose/nerdcommenter'		" \c<Space> でコメント切り替え
 NeoBundle 'tpope/vim-surround'			" visualモードでS<文字>で囲む
 NeoBundle 'thinca/vim-qfreplace'		" quickfix で grep & replace
 NeoBundle 'Shougo/vinarise.vim'			" バイナリエディタ
+NeoBundle 'Lokaltog/vim-easymotion'		" \\jkwb で移動を簡単にする
 " ------------------------------------------------------------------------------
 " eregex
 " ------------------------------------------------------------------------------
