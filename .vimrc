@@ -442,7 +442,7 @@ NeoBundle 'kumattau/previm'			" markdown browswer preview
 NeoBundle 'kannokanno/vimtest'			" testing framework (using previm)
 autocmd vimrc BufNewFile,BufRead *.md,*.markdown,*.mdown,*.mkd,*.mkdn
 \ setlocal filetype=ghmarkdown			" ghmarkdown で開く
-nnoremap <Leader>q :<C-u>PrevimOpen<CR>
+nnoremap <Leader>q :<C-u>PrevimOpen<CR>|	" \q で preview
 " ------------------------------------------------------------------------------
 " pukiwiki
 " ------------------------------------------------------------------------------
