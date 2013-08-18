@@ -125,6 +125,7 @@ set tabstop=8				" 互換のためタブは8文字のままにしておく
 autocmd vimrc FileType c          setlocal           shiftwidth=8 softtabstop=8
 autocmd vimrc FileType sh         setlocal expandtab shiftwidth=2 softtabstop=2
 autocmd vimrc FileType awk        setlocal expandtab shiftwidth=2 softtabstop=2
+autocmd vimrc FileType xml        setlocal expandtab shiftwidth=2 softtabstop=2
 autocmd vimrc FileType html       setlocal expandtab shiftwidth=2 softtabstop=2
 autocmd vimrc FileType python     setlocal expandtab shiftwidth=4 softtabstop=4
 autocmd vimrc FileType fortran    setlocal expandtab shiftwidth=2 softtabstop=2
@@ -438,9 +439,21 @@ NeoBundle 'tyru/open-browser.vim'		" browser opener
 NeoBundle 'tpope/vim-markdown'			" markdown
 NeoBundle 'jtratner/vim-flavored-markdown'	" ghmarkdown (gfm format)
 NeoBundle 'kumattau/previm'			" markdown browswer preview
+NeoBundle 'kannokanno/vimtest'			" testing framework (using previm)
 autocmd vimrc BufNewFile,BufRead *.md,*.markdown,*.mdown,*.mkd,*.mkdn
 \ setlocal filetype=ghmarkdown			" ghmarkdown で開く
 nnoremap <Leader>q :<C-u>PrevimOpen<CR>
+" ------------------------------------------------------------------------------
+" pukiwiki
+" ------------------------------------------------------------------------------
+NeoBundle 'syngan/vim-pukiwiki'			" pukiwiki page editor
+let g:pukiwiki_config={
+    \   "localhost" : {
+    \       "url" : "http://localhost/pukiwiki/",
+    \       "top" : "FrontPage",
+    \   },
+    \}
+let g:pukiwiki_timestamp_update=1		" 書込時にタイムスタンプを更新
 " ------------------------------------------------------------------------------
 " git
 " ------------------------------------------------------------------------------
