@@ -2,7 +2,9 @@
 # common
 # ------------------------------------------------------------------------------
 export LANG=ja_JP.UTF-8			# 日本語設定
-export TERM=xterm-256color		# ターミナル256色
+export TERMINFO=~/.terminfo		# ローカルの terminfo を読み込む
+export TERM=screen-256color		# tmux 256色対応
+export COLORTERM=gnome-terminal		# 念のため設定
 # ------------------------------------------------------------------------------
 # color
 # ------------------------------------------------------------------------------
@@ -14,6 +16,10 @@ autoload -U colors; colors		# カラー機能
 # PROMPT="%n@%m$ "			# user@host$
 # RPROMPT="[%~]"			# 現在のパスを右側に表示
 PROMPT="%n@%m:%~$ "			# debian 風 (user@host:path$)
+local csd=`id``hostname`		# hostnameとidでプロンプトに自動配色
+local clr=$'%{\e[38;5;'"$(printf "%d\n" 0x$(echo $csd|md5sum|cut -c1-2))"'m%}'
+local rst=$'%{\e[m%}'
+PROMPT="%B$clr$PROMPT$rst%b"		# 全体をboldする
 # ------------------------------------------------------------------------------
 # 補完
 # ------------------------------------------------------------------------------
