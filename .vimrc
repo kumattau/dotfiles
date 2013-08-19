@@ -205,24 +205,25 @@ syntax on					" カラー表示
 set t_Co=256					" ターミナルで256色対応
 " ベル無効化 (Vim 起動後に設定することで CUI/GUI の両方に対応させている)
 autocmd vimrc VimEnter * set visualbell t_vb=
-" NeoBundle 'tomasr/molokai'
-" NeoBundle 'Pychimp/vim-luna'
-" NeoBundle 'Shougo/neobundle.vim'
-" NeoBundle 'altercation/vim-colors-solarized'
-" NeoBundle 'baskerville/bubblegum'
-" NeoBundle 'wombat256.vim'
+NeoBundle 'tomasr/molokai'
+NeoBundle 'Pychimp/vim-luna'
+NeoBundle 'Shougo/neobundle.vim'
+NeoBundle 'altercation/vim-colors-solarized'
+NeoBundle 'baskerville/bubblegum'
+NeoBundle 'wombat256.vim'
 NeoBundle 'chriskempson/vim-tomorrow-theme'
-colorscheme Tomorrow-Night-Eighties		" pop な配色
-" colorscheme molokai				" pop な配色
-" let g:molokaki_original=1
-" let g:rehash256=1
-" set background=dark
+set background=dark				" 背景は暗め
+" colorscheme Tomorrow-Night-Eighties		" pop な配色
+colorscheme molokai				" pop な配色
+let g:molokai_original=1
+let g:rehash256=1
 " colorscheme bubblegum				" 淡い配色
 " colorscheme luna				" pop な配色
 " colorscheme wombat256mod			" 256色対応 wombat
 " colorscheme solarized				" solarized
 " let g:solarized_termcolors=256		" 256色対応
 " let g:solarized_contrast="high"		" コントラストを高めに
+" let g:solarized_termtrans=1			" 透過処理を有効にする
 " NeoBundle 'vim-scripts/trailing-whitespace'	" trailing-whitespace を赤色表示
 set list listchars=tab:»\ ,trail:˷,nbsp:▫	" 不可視文字を可視化
 set cursorline 					" カーソル行ハイライト
