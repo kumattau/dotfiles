@@ -107,10 +107,10 @@ nnoremap <C-h> <C-w>h|			" Ctrl + hjkl でウィンドウ間を移動
 nnoremap <C-j> <C-w>j|			" Ctrl + hjkl でウィンドウ間を移動
 nnoremap <C-k> <C-w>k|			" Ctrl + hjkl でウィンドウ間を移動
 nnoremap <C-l> <C-w>l|			" Ctrl + hjkl でウィンドウ間を移動
-nnoremap <C-Left>  <C-w><<CR>|		" Shift + 矢印でウィンドウサイズを変更
-nnoremap <C-Right> <C-w>><CR>|		" Shift + 矢印でウィンドウサイズを変更
-nnoremap <C-Up>    <C-w>-<CR>|		" Shift + 矢印でウィンドウサイズを変更
-nnoremap <C-Down>  <C-w>+<CR>|		" Shift + 矢印でウィンドウサイズを変更
+nnoremap <C-H> <C-w><|			" Ctrl + HJKL でウィンドウサイズを変更
+nnoremap <C-J> <C-w>-|			" Ctrl + HJKL でウィンドウサイズを変更
+nnoremap <C-K> <C-w>+|			" Ctrl + HJKL でウィンドウサイズを変更
+nnoremap <C-L> <C-w>>|			" Ctrl + HJKL でウィンドウサイズを変更
 nnoremap < :bp<CR>|			" < でバッファを戻る
 nnoremap > :bn<CR>|			" > でバッファを進む
 " ------------------------------------------------------------------------------
