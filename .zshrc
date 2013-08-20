@@ -1,22 +1,33 @@
 # ------------------------------------------------------------------------------
-# common
+# LANG
 # ------------------------------------------------------------------------------
 export LANG=ja_JP.UTF-8			# 日本語設定
-export TERMINFO=~/.terminfo		# ローカルの terminfo を読み込む
-export TERM=screen-256color		# tmux 256色対応
-export COLORTERM=gnome-terminal		# 念のため設定
 # ------------------------------------------------------------------------------
-# color
+# TERM
+# ------------------------------------------------------------------------------
+function () {
+  for term in $*
+  do
+    prfx=$(echo $term | cut -c1)
+    if [ -f /lib/terminfo/$prfx/$term -o -f /usr/share/terminfo/$prfx/$term ]
+    then
+      export TERM=$term
+      break
+    fi
+  done
+} screen-256color xterm-256color xterm-color xterm
+# ------------------------------------------------------------------------------
+# dircolors
 # ------------------------------------------------------------------------------
 autoload -U colors; colors		# カラー機能
-[ -e ~/.dircolors ] && eval `dircolors -b ~/.dircolors`	# dircolors 読み込み
+[ -e ~/.dircolors ] && eval $(dircolors -b ~/.dircolors) # dircolors 読み込み
 # ------------------------------------------------------------------------------
 # プロンプト
 # ------------------------------------------------------------------------------
 # PROMPT="%n@%m$ "			# user@host$
 # RPROMPT="[%~]"			# 現在のパスを右側に表示
 PROMPT="%n@%m:%~$ "			# debian 風 (user@host:path$)
-local csd=`id``hostname`		# hostnameとidでプロンプトに自動配色
+local csd=`hostname`			# hostnameとidでプロンプトに自動配色
 local clr=$'%{\e[38;5;'"$(printf "%d\n" 0x$(echo $csd|md5sum|cut -c1-2))"'m%}'
 local rst=$'%{\e[m%}'
 PROMPT="%B$clr$PROMPT$rst%b"		# 全体をboldする
@@ -37,6 +48,8 @@ zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}	# カラー表示
 setopt noautoremoveslash		# パスの最後の / を自動削除しない
 setopt auto_pushd			# cd でディレクトリスタックに自動保存
 setopt pushd_ignore_dups		# 重複してディレクトリスタック保存しない
+setopt correct				# コマンドの間違いを修正する
+setopt nolistbeep			# 補完時のビープ音を無効にする
 # ------------------------------------------------------------------------------
 # 履歴
 # ------------------------------------------------------------------------------
@@ -66,21 +79,17 @@ bindkey "^[r" redo			# Esc-r でリドゥ
 # ------------------------------------------------------------------------------
 # ウィンドウタイトルの更新
 # ------------------------------------------------------------------------------
-function precmd_loc() {
+function precmd() {
   echo -ne "\033]0;${HOST%%.*}:${PWD}\007"
 }
-autoload -Uz add-zsh-hook
-add-zsh-hook precmd precmd_loc
 # ------------------------------------------------------------------------------
 # その他
 # ------------------------------------------------------------------------------
 WORDCHARS='*?_-.[]~=&;!#$%^(){}<>'	# Ctrl-W で / は区切り文字とする
-setopt re_match_pcre			# PCRE 互換の正規表現を使う
+setopt re_match_pcre 2>/dev/null	# (可能なら) PCRE 互換の正規表現を使う
 # ------------------------------------------------------------------------------
 # alias
 # ------------------------------------------------------------------------------
-alias la="ls -a"
-alias ll="ls -l"
 alias rm="rm -i"			# 削除時確認
 alias cp="cp -ip"			# コピー時確認 mode/onwer/timestamp保存
 alias mv="mv -i"			# 移動時確認
@@ -88,8 +97,12 @@ alias hs="history -E 1"			# 履歴の全検索
 # ------------------------------------------------------------------------------
 # source local zshrc
 # ------------------------------------------------------------------------------
-_platform=`uname -s | tr A-Z a-z`
-_hostname=`uname -n`
-test -e .zshrc.${_platform} && source .zshrc.${_platform}
-test -e .zshrc.${_hostname} && source .zshrc.${_hostname}
+local __hostname=$(hostname -s)
+local __platform=$(uname -s | tr A-Z a-z | sed 's/[^a-z]//g')
+test -e .zshrc.${__platform} && source .zshrc.${__platform}
+test -e .zshrc.${__hostname} && source .zshrc.${__hostname}
+# ------------------------------------------------------------------------------
+# 全ての設定が終わってから実行
+# ------------------------------------------------------------------------------
+typeset -U path cdpath fpath manpath	# パスの重複をなくす
 
