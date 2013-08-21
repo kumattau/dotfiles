@@ -450,6 +450,10 @@ autocmd vimrc BufNewFile,BufRead *.md,*.markdown,*.mdown,*.mkd,*.mkdn
 \ setlocal filetype=ghmarkdown			" ghmarkdown で開く
 nnoremap <Leader>q :<C-u>PrevimOpen<CR>|	" \q で preview
 " ------------------------------------------------------------------------------
+" textile
+" ------------------------------------------------------------------------------
+NeoBundle 'timcharper/textile.vim'
+" ------------------------------------------------------------------------------
 " pukiwiki
 " ------------------------------------------------------------------------------
 NeoBundle 'syngan/vim-pukiwiki'			" pukiwiki page editor
