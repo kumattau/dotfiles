@@ -2,10 +2,11 @@
 # LANG
 # ------------------------------------------------------------------------------
 export LANG=ja_JP.UTF-8			# 日本語設定
+
 # ------------------------------------------------------------------------------
 # TERM
 # ------------------------------------------------------------------------------
-function () {
+__export_best_term () {
   for term in $*
   do
     prfx=$(echo $term | cut -c1)
@@ -15,12 +16,16 @@ function () {
       break
     fi
   done
-} screen-256color xterm-256color xterm-color xterm
+}
+__export_best_term screen-256color xterm-256color xterm-color xterm
 # ------------------------------------------------------------------------------
-# dircolors
+# COLOR THEME (https://github.com/sona-tar/terminal-color-theme)
 # ------------------------------------------------------------------------------
-autoload -U colors; colors		# カラー機能
-[ -e ~/.dircolors ] && eval $(dircolors -b ~/.dircolors) # dircolors 読み込み
+autoload -U colors; colors					# カラー機能
+[ -e ~/.dircolors ] && eval $(dircolors -b ~/.dircolors)	# dircolors 読込
+COLOR_THEME=molokai						# 全体のテーマ
+[ -e .terminal-color-theme ] && \
+  source .terminal-color-theme/color-theme-${COLOR_THEME}/${COLOR_THEME}.sh
 # ------------------------------------------------------------------------------
 # プロンプト
 # ------------------------------------------------------------------------------
@@ -79,7 +84,7 @@ bindkey "^[r" redo			# Esc-r でリドゥ
 # ------------------------------------------------------------------------------
 # ウィンドウタイトルの更新
 # ------------------------------------------------------------------------------
-function precmd() {
+precmd() {
   echo -ne "\033]0;${HOST%%.*}:${PWD}\007"
 }
 # ------------------------------------------------------------------------------
@@ -97,6 +102,7 @@ alias hs="history -E 1"			# 履歴の全検索
 # ------------------------------------------------------------------------------
 # source local zshrc
 # ------------------------------------------------------------------------------
+test -e .zshrc.local && source .zshrc.local
 local __hostname=$(hostname -s)
 local __platform=$(uname -s | tr A-Z a-z | sed 's/[^a-z]//g')
 test -e .zshrc.${__platform} && source .zshrc.${__platform}
