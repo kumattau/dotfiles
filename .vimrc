@@ -217,8 +217,9 @@ set background=dark				" 背景は暗め
 colorscheme molokai				" pop な配色
 let g:molokai_original=0
 let g:rehash256=1
-highlight Normal ctermbg=NONE
-highlight Comment ctermfg=gray
+highlight Normal  ctermbg=NONE			" 背景透過
+highlight Visual  ctermbg=darkgray		" 選択範囲を明るく
+highlight Comment ctermfg=gray			" コメントを明るく
 " colorscheme bubblegum				" 淡い配色
 " colorscheme luna				" pop な配色
 " colorscheme wombat256mod			" 256色対応 wombat
