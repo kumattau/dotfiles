@@ -215,8 +215,10 @@ NeoBundle 'chriskempson/vim-tomorrow-theme'
 set background=dark				" 背景は暗め
 " colorscheme Tomorrow-Night-Eighties		" pop な配色
 colorscheme molokai				" pop な配色
-let g:molokai_original=1
+let g:molokai_original=0
 let g:rehash256=1
+highlight Normal ctermbg=NONE
+highlight Comment ctermfg=gray
 " colorscheme bubblegum				" 淡い配色
 " colorscheme luna				" pop な配色
 " colorscheme wombat256mod			" 256色対応 wombat
