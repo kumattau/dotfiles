@@ -60,6 +60,7 @@ set hidden				" バッファを閉じずに隠す(Undo履歴を残す)
 set switchbuf=useopen			" 新しく開く代わりに既存バッファを開く
 set backspace=indent,eol,start		" バックスペースで何でも消せるようにする
 set textwidth=0				" 自動的に改行が入るのを無効化
+set formatoptions=q			" (textwidthが設定されても)自動改行しない
 if has("unix")
   cnoremap w!! w !sudo tee % >/dev/null|" sudo root して保存 (for unix only)
 endif
@@ -122,7 +123,7 @@ set wildmode=list:longest		" 全マッチを列挙し最長の文字列まで補
 " indent
 " ------------------------------------------------------------------------------
 set tabstop=8				" 互換のためタブは8文字のままにしておく
-autocmd vimrc FileType c          setlocal           shiftwidth=8 softtabstop=8
+autocmd vimrc FileType c          setlocal expandtab shiftwidth=4 softtabstop=4
 autocmd vimrc FileType sh         setlocal expandtab shiftwidth=2 softtabstop=2
 autocmd vimrc FileType awk        setlocal expandtab shiftwidth=2 softtabstop=2
 autocmd vimrc FileType xml        setlocal expandtab shiftwidth=2 softtabstop=2
@@ -232,6 +233,7 @@ set list listchars=tab:»\ ,trail:˷,nbsp:▫	" 不可視文字を可視化
 set cursorline 					" カーソル行ハイライト
 highlight CursorLine gui=underline guifg=NONE guibg=NONE
 highlight CursorLine term=underline cterm=underline ctermfg=NONE ctermbg=NONE
+set list! cursorline!				" デフォルトで表示しない
 let g:my_syntax_status='on'
 function! g:my_toggle_syntax()
   if g:my_syntax_status=='on'
@@ -326,6 +328,12 @@ if has('lua') && ((v:version >= 704) || (v:version >= 703 && has('patch885')))
   function! s:hooks.on_source(bundle)
     " let g:neocomplete#auto_completion_start_length=9	" 自動補完を抑止(通常2)
     let g:neocomplete#enable_smart_case=1		" 大文字小文字の賢い補完
+    " <C-Space>起動<C-y>確定<C-e>キャンセル<C-g>戻す<C-l>シェル補完
+    inoremap <expr><C-Space> neocomplete#manual_omni_complete()|
+    inoremap <expr><C-y> neocomplete#close_popup()|
+    inoremap <expr><C-e> pumvisible() ? neocomplete#cancel_popup() : "\<End>"|
+    inoremap <expr><C-g> neocomplete#undo_completion()|
+    inoremap <expr><C-l> neocomplete#complete_common_string()
   endfunction
 else
   NeoBundleLazy 'Shougo/neocomplcache.vim', {'autoload': {'insert': 1}}
@@ -334,6 +342,12 @@ else
   function! s:hooks.on_source(bundle)
     " let g:neocomplcache_auto_completion_start_length=9" 自動補完を抑止(通常2)
     let g:neocomplcache_enable_smart_case=1		" 大文字小文字の賢い補完
+    " <C-Space>起動<C-y>確定<C-e>キャンセル<C-g>戻す<C-l>シェル補完
+    inoremap <expr><C-Space> neocomplcache_manual_omni_complete()|
+    inoremap <expr><C-y> neocomplcache_close_popup()|
+    inoremap <expr><C-e> pumvisible() ? neocomplcache_cancel_popup() : "\<End>"|
+    inoremap <expr><C-g> neocomplcache_undo_completion()|
+    inoremap <expr><C-l> neocomplcache_complete_common_string()
   endfunction
 endif
 " ------------------------------------------------------------------------------
@@ -378,8 +392,10 @@ let g:quickrun_config['html'] =
 " ------------------------------------------------------------------------------
 " gundo
 " ------------------------------------------------------------------------------
-NeoBundle 'sjl/gundo.vim'			" git reflog のような履歴管理
-nnoremap <Leader>g :<C-u>GundoToggle<CR>|	" \g でトグル
+if has("persistent_undo")
+  NeoBundle 'sjl/gundo.vim'			" git reflog のような履歴管理
+  nnoremap <Leader>g :<C-u>GundoToggle<CR>|	" \g でトグル
+endif
 " ------------------------------------------------------------------------------
 " vim-ref (man, pydoc, webpage reference)
 " ------------------------------------------------------------------------------
