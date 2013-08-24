@@ -43,7 +43,7 @@ local clr=$'%{\e[38;5;'"$(printf "%d\n" 0x$(echo $csd|md5sum|cut -c1-2))"'m%}'
 local rst=$'%{\e[m%}'
 PROMPT="%B$clr$PROMPT$rst%b"		# 全体をboldする
 #RPROMPT="%B$clr$RPROMPT$rst%b"		# 全体をboldする
-setopt transient_rprompt		# コピペ時に RPROMPT を非表示にする
+# setopt transient_rprompt		# コピペ時に RPROMPT を非表示にする
 # ------------------------------------------------------------------------------
 # 補完
 # ------------------------------------------------------------------------------
