@@ -114,6 +114,8 @@ nnoremap <C-Down>  <C-w>+|		" Ctrl + 矢印 でウィンドウサイズを変更
 nnoremap <C-Right> <C-w>>|		" Ctrl + 矢印 でウィンドウサイズを変更
 nnoremap < :bp<CR>|			" < でバッファを戻る
 nnoremap > :bn<CR>|			" > でバッファを進む
+nnoremap - <C-u>:sp<CR>|		" - で横分割
+nnoremap <Bar> <C-u>:vsp<CR>|		" | で縦分割
 " ------------------------------------------------------------------------------
 " menu
 " ------------------------------------------------------------------------------
@@ -173,10 +175,11 @@ NeoBundle 'Shougo/vimproc', {
 NeoBundle 'Shougo/unite.vim', {'depends' : ['Shougo/vimproc']}
 nnoremap [unite]    <Nop>|			" unite ショートカット
 nmap     <Space>u [unite]|			" <Space>u で prefix
-nnoremap [unite]<Space> :<C-u>Unite |		" Unite のみ入力
-nnoremap [unite]b :<C-u>Unite buffer<CR>|	" バッファ一覧を表示
-nnoremap [unite]f :<C-u>Unite find<CR>|		" find
-nnoremap [unite]g :<C-u>Unite grep:%<CR>|	" バッファを grep
+nnoremap [unite]<Space> :<C-u>Unite |	" Unite のみ入力
+nnoremap [unite]b :<C-u>Unite -auto-preview buffer<CR>|		" バッファ一覧
+nnoremap [unite]f :<C-u>Unite -no-quit -auto-preview find<CR>|	" find
+nnoremap [unite]g :<C-u>Unite -no-quit -auto-preview grep<CR>|	" grep
+nnoremap [unite]G :<C-u>Unite -no-quit -auto-preview grep:%<CR>|" バッファ grep
 " ------------------------------------------------------------------------------
 " other plugins
 " ------------------------------------------------------------------------------
