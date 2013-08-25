@@ -65,6 +65,16 @@ set formatoptions=q			" (textwidthが設定されても)自動改行しない
 if has("unix")
   cnoremap w!! w !sudo tee % >/dev/null|" sudo root して保存 (for unix only)
 endif
+" インサートモード時は emacs like なキーバインド (あまり使わない)
+inoremap <C-f> <Right>|			" C-f で左へ移動
+inoremap <C-b> <Left>|			" C-b で右へ移動
+inoremap <C-p> <Up>|			" C-p で上へ移動
+inoremap <C-n> <Down>|			" C-n で下へ移動
+inoremap <C-a> <Home>|			" C-a で行頭へ移動
+inoremap <C-e> <End>|			" C-e で行末へ移動
+inoremap <C-h> <BS>|			" C-h でバックスペース
+inoremap <C-d> <Del>|			" C-d でデリート
+inoremap <C-m> <CR>|			" C-m で改行
 " ------------------------------------------------------------------------------
 " undo/backup/swap/book/hist
 " ------------------------------------------------------------------------------
