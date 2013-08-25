@@ -248,11 +248,9 @@ highlight Comment ctermfg=gray			" コメントを明るく
 " let g:solarized_contrast="high"		" コントラストを高めに
 " let g:solarized_termtrans=1			" 透過処理を有効にする
 " NeoBundle 'vim-scripts/trailing-whitespace'	" trailing-whitespace を赤色表示
-set list listchars=tab:»\ ,trail:˷,nbsp:▫	" 不可視文字を可視化
-set cursorline 					" カーソル行ハイライト
+set listchars=tab:>\ ,trail:_,nbsp:@		" 不可視文字を可視化
 highlight CursorLine gui=underline guifg=NONE guibg=NONE
 highlight CursorLine term=underline cterm=underline ctermfg=NONE ctermbg=NONE
-set list! cursorline!				" デフォルトで表示しない
 let g:my_syntax_status='on'
 function! g:my_toggle_syntax()
   if g:my_syntax_status=='on'
@@ -485,10 +483,6 @@ autocmd vimrc BufNewFile,BufRead *.md,*.markdown,*.mdown,*.mkd,*.mkdn
 \ setlocal filetype=ghmarkdown			" ghmarkdown で開く
 nnoremap <Leader>q :<C-u>PrevimOpen<CR>|	" \q で preview
 " ------------------------------------------------------------------------------
-" textile
-" ------------------------------------------------------------------------------
-NeoBundle 'timcharper/textile.vim'
-" ------------------------------------------------------------------------------
 " pukiwiki
 " ------------------------------------------------------------------------------
 NeoBundle 'syngan/vim-pukiwiki'			" pukiwiki page editor
@@ -499,6 +493,12 @@ let g:pukiwiki_config={
     \   },
     \}
 let g:pukiwiki_timestamp_update=1		" 書込時にタイムスタンプを更新
+" ------------------------------------------------------------------------------
+" other lightweight markup languages
+" ------------------------------------------------------------------------------
+NeoBundle 'timcharper/textile.vim'		" textile syntax
+NeoBundle 'Rykka/riv.vim'			" reStructuredText syntax
+NeoBundle 'dagwieers/asciidoc-vim'		" asciidoc syntax
 " ------------------------------------------------------------------------------
 " git
 " ------------------------------------------------------------------------------
