@@ -38,7 +38,7 @@ fi
 # PROMPT="%n@%m$ "			# user@host$
 # RPROMPT="[%~]"			# 現在のパスを右側に表示
 PROMPT="%n@%m:%~$ "			# debian 風 (user@host:path$)
-local csd=`hostname`			# hostnameとidでプロンプトに自動配色
+local csd=${HOST%%.*}			# ホスト名でプロンプトに自動配色
 local clr=$'%{\e[38;5;'"$(printf "%d\n" 0x$(echo $csd|md5sum|cut -c1-2))"'m%}'
 local rst=$'%{\e[m%}'
 PROMPT="%B$clr$PROMPT$rst%b"		# 全体をboldする
