@@ -411,6 +411,8 @@ let g:quickrun_config['html'] =
 " ------------------------------------------------------------------------------
 if has("persistent_undo")
   NeoBundle 'sjl/gundo.vim'			" git reflog のような履歴管理
+  let g:gundo_preview_bottom=1			" diffを真下に開く
+  let g:gundo_right=1				" logを右に開く
   nnoremap <Leader>g :<C-u>GundoToggle<CR>|	" \g でトグル
 endif
 " ------------------------------------------------------------------------------
