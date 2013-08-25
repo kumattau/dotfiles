@@ -207,6 +207,7 @@ NeoBundle 'tpope/vim-surround'			" visualモードでS<文字>で囲む
 NeoBundle 'thinca/vim-qfreplace'		" quickfix で grep & replace
 NeoBundle 'Shougo/vinarise.vim'			" バイナリエディタ
 NeoBundle 'Lokaltog/vim-easymotion'		" \\jkwb で移動を簡単にする
+NeoBundle 'guns/xterm-color-table.vim'		" xterm のカラーテーブル表示
 " ------------------------------------------------------------------------------
 " eregex
 " ------------------------------------------------------------------------------
