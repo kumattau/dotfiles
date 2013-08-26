@@ -55,14 +55,11 @@ __str2color() {
   done
   echo $((16 + ${sred} * 36 + ${sgre} * 6 + ${sblu}))
 }
-# PROMPT="%n@%m$ "			# user@host$
-# RPROMPT="[%~]"			# 現在のパスを右側に表示
 PROMPT="%n@%m:%~$ "			# debian 風 (user@host:path$)
 local __clr=$'%{\e[38;5;'`__str2color ${HOST%%.*}`'m%}'
-local __rst=$'%{\e[m%}'			# ホスト名で色を変更する
-PROMPT="%B$__clr$PROMPT$__rst%b"	# 全体をboldする
-#RPROMPT="%B$clr$RPROMPT$rst%b"		# 全体をboldする
-# setopt transient_rprompt		# コピペ時に RPROMPT を非表示にする
+local __rst=$'%{\e[m%}'
+PROMPT="$__clr$PROMPT$__rst"		# ホスト名で色をつける
+PROMPT="%B$PROMPT%b"			# 全体をboldする
 # ------------------------------------------------------------------------------
 # 補完
 # ------------------------------------------------------------------------------
