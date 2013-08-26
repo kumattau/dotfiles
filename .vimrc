@@ -221,6 +221,7 @@ nnoremap <silent> <Space><C-p> :<C-u>CtrlP<CR>|	" yankringと被るため<Space>
 " ------------------------------------------------------------------------------
 " appearance
 " ------------------------------------------------------------------------------
+NeoBundle 'ujihisa/unite-colorscheme'		" Unite でカラースキーマを表示
 syntax on					" カラー表示
 set t_Co=256					" ターミナルで256色対応
 " ベル無効化 (Vim 起動後に設定することで CUI/GUI の両方に対応させている)
@@ -232,8 +233,11 @@ NeoBundle 'altercation/vim-colors-solarized'
 NeoBundle 'baskerville/bubblegum'
 NeoBundle 'wombat256.vim'
 NeoBundle 'chriskempson/vim-tomorrow-theme'
+NeoBundle 'jnurmine/Zenburn'
+NeoBundle 'vim-scripts/Ambient-Color-Scheme'
+NeoBundle 'twerth/ir_black'
 set background=dark				" 背景は暗め
-" colorscheme Tomorrow-Night-Eighties		" pop な配色
+" colorscheme ir_black
 colorscheme molokai				" pop な配色
 let g:molokai_original=0
 let g:rehash256=1
