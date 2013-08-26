@@ -35,13 +35,32 @@ fi
 # ------------------------------------------------------------------------------
 # プロンプト
 # ------------------------------------------------------------------------------
+# 文字列に明るい色を割り当てる
+# http://kakurasan.ehoh.net/summary/palette.color256.term.html
+__str2color() {
+  local ssig=$(echo -n "$1" | md5sum)
+  local sred
+  local sgre
+  local sblu
+  for ((i=1; ${i} <= 30; i++))
+  do
+    sred=$(($(printf "%d\n" "0x$(echo ${ssig} | cut -c$((${i} + 0)))") % 6))
+    sgre=$(($(printf "%d\n" "0x$(echo ${ssig} | cut -c$((${i} + 1)))") % 6))
+    sblu=$(($(printf "%d\n" "0x$(echo ${ssig} | cut -c$((${i} + 2)))") % 6))
+    # グレースケールは省く
+    if ((${sred} == ${sgre} && ${sgre} == ${sblu})); then continue; fi
+    local ssum=$((${sred} + ${sgre} + ${sblu}))
+    # GBR 値の合計が大きい(明るい)場合、採用する
+    if ((9 <= ${ssum} && ${ssum} <= 15)); then break; fi
+  done
+  echo $((16 + ${sred} * 36 + ${sgre} * 6 + ${sblu}))
+}
 # PROMPT="%n@%m$ "			# user@host$
 # RPROMPT="[%~]"			# 現在のパスを右側に表示
 PROMPT="%n@%m:%~$ "			# debian 風 (user@host:path$)
-local csd=${HOST%%.*}			# ホスト名でプロンプトに自動配色
-local clr=$'%{\e[38;5;'"$(printf "%d\n" 0x$(echo $csd|md5sum|cut -c1-2))"'m%}'
-local rst=$'%{\e[m%}'
-PROMPT="%B$clr$PROMPT$rst%b"		# 全体をboldする
+local __clr=$'%{\e[38;5;'`__str2color ${HOST%%.*}`'m%}'
+local __rst=$'%{\e[m%}'			# ホスト名で色を変更する
+PROMPT="%B$__clr$PROMPT$__rst%b"	# 全体をboldする
 #RPROMPT="%B$clr$RPROMPT$rst%b"		# 全体をboldする
 # setopt transient_rprompt		# コピペ時に RPROMPT を非表示にする
 # ------------------------------------------------------------------------------
