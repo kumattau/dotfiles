@@ -159,9 +159,9 @@ let fortran_indent_less=1		" プログラム単位のインデントを無効化
 " ------------------------------------------------------------------------------
 if has("gui_running")
   if has("win32") || has("win64")
-    set guifont=MS_Gothic:h9:cSHIFTJIS	" フォントを小さくする (windows)
+    set guifont=MS_Gothic:h10:cSHIFTJIS	" フォントを小さくする (windows)
   else
-    set guifont=Monospace\ 9		" フォントを小さくする (not windows)
+    set guifont=Monospace\ 10		" フォントを小さくする (not windows)
   endif
   set guioptions& guioptions-=T		" ツールバーを非表示
   if has("vim_starting")		" 起動時のみに動作させる(リロード対応)
@@ -364,11 +364,11 @@ else
     " let g:neocomplcache_auto_completion_start_length=9" 自動補完を抑止(通常2)
     let g:neocomplcache_enable_smart_case=1		" 大文字小文字の賢い補完
     " <C-Space>起動<C-y>確定<C-e>キャンセル<C-g>戻す<C-l>シェル補完
-    inoremap <expr><C-Space> neocomplcache_manual_omni_complete()|
-    inoremap <expr><C-y> neocomplcache_close_popup()|
-    inoremap <expr><C-e> pumvisible() ? neocomplcache_cancel_popup() : "\<End>"|
-    inoremap <expr><C-g> neocomplcache_undo_completion()|
-    inoremap <expr><C-l> neocomplcache_complete_common_string()
+    inoremap <expr><C-Space> neocomplcache#manual_omni_complete()|
+    inoremap <expr><C-y> neocomplcache#close_popup()|
+    inoremap <expr><C-e> pumvisible() ? neocomplcache#cancel_popup() : "\<End>"|
+    inoremap <expr><C-g> neocomplcache#undo_completion()|
+    inoremap <expr><C-l> neocomplcache#complete_common_string()
   endfunction
 endif
 " ------------------------------------------------------------------------------

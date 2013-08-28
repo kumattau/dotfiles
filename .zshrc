@@ -38,25 +38,46 @@ fi
 # 文字列に明るい色を割り当てる
 # http://kakurasan.ehoh.net/summary/palette.color256.term.html
 __str2color() {
-  local ssig=$(echo -n "$1" | md5sum)
-  local sred
-  local sgre
-  local sblu
-  for ((i=1; ${i} <= 30; i++))
+  local arg=$1
+  local str=""
+  local r=1
+  for ((r=1; r <= 100; r++))
   do
-    sred=$(($(printf "%d\n" "0x$(echo ${ssig} | cut -c$((${i} + 0)))") % 6))
-    sgre=$(($(printf "%d\n" "0x$(echo ${ssig} | cut -c$((${i} + 1)))") % 6))
-    sblu=$(($(printf "%d\n" "0x$(echo ${ssig} | cut -c$((${i} + 2)))") % 6))
-    # グレースケールは省く
-    if ((${sred} == ${sgre} && ${sgre} == ${sblu})); then continue; fi
-    local ssum=$((${sred} + ${sgre} + ${sblu}))
-    # GBR 値の合計が大きい(明るい)場合、採用する
-    if ((9 <= ${ssum} && ${ssum} <= 15)); then break; fi
+    str="${str}${arg}"
+    local sig=$(echo "${str}" | md5sum | awk '{print $1}')
+    local i=1
+    for ((i=1; ${i} <= 30; i++))
+    do
+      local red=$(($(printf "%d" "0x$(echo ${sig}|cut -c$((${i}+0)))") % 6))
+      local gre=$(($(printf "%d" "0x$(echo ${sig}|cut -c$((${i}+1)))") % 6))
+      local blu=$(($(printf "%d" "0x$(echo ${sig}|cut -c$((${i}+2)))") % 6))
+      # グレースケールは省く
+      if ((${red} == ${gre} && ${gre} == ${blu})); then continue; fi
+      # 青系はディレクトリの配色と被るので省く
+      if ((${red} <  ${blu} || ${gre} <  ${blu})); then continue; fi
+      # GBR 値の合計が大きい(明るい)場合、採用する
+      local sum=$((${red} + ${gre} + ${blu}))
+      if ((9 <= ${sum} && ${sum} <= 12))
+      then
+        echo $((16 + ${red} * 36 + ${gre} * 6 + ${blu}))
+        return 0
+      fi
+    done
   done
-  echo $((16 + ${sred} * 36 + ${sgre} * 6 + ${sblu}))
+  return 1
+}
+# 配色テスト関数(引数の文字列をカラー番号に変換して色付きで表示)
+__print_str2color() {
+  local str=""
+  for str in $*
+  do
+    local col="$(__str2color ${str})"
+    local lbl="$(printf "%3d %s" ${col} ${str})"
+    echo -e "\e[38;5;${col}m${lbl}\e[m"
+  done
 }
 PROMPT="%n@%m:%~$ "			# debian 風 (user@host:path$)
-local __clr=$'%{\e[38;5;'`__str2color ${HOST%%.*}`'m%}'
+local __clr=$'%{\e[38;5;'$(__str2color ${HOST%%.*})'m%}'
 local __rst=$'%{\e[m%}'
 PROMPT="$__clr$PROMPT$__rst"		# ホスト名で色をつける
 PROMPT="%B$PROMPT%b"			# 全体をboldする
@@ -209,11 +230,11 @@ fi
 # ------------------------------------------------------------------------------
 # source local zshrc
 # ------------------------------------------------------------------------------
-test -e .zshrc.local && source .zshrc.local
+test -e ~/.zshrc.local && source ~/.zshrc.local
 local __hostname=${HOST%%.*}
 local __platform=$(uname -s | tr A-Z a-z | sed 's/[^a-z]//g')
-test -e .zshrc.${__platform} && source .zshrc.${__platform}
-test -e .zshrc.${__hostname} && source .zshrc.${__hostname}
+test -e ~/.zshrc.${__platform} && source ~/.zshrc.${__platform}
+test -e ~/.zshrc.${__hostname} && source ~/.zshrc.${__hostname}
 # ------------------------------------------------------------------------------
 # 全ての設定が終わってから実行
 # ------------------------------------------------------------------------------
