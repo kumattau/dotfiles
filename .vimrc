@@ -511,5 +511,26 @@ NeoBundle 'dagwieers/asciidoc-vim'		" asciidoc syntax
 NeoBundle 'gregsexton/gitv'
 NeoBundle 'tpope/vim-fugitive'
 
+" ------------------------------------------------------------------------------
+" yank to remote (require ClipboardTextListener)
+" http://yskwkzhr.blogspot.jp/2011/04/copying-remote-screen-paste-buffer.html
+" http://blog.remora.cx/2011/08/yank-to-local-clipboard-from-vim-on-screen.html
+" ------------------------------------------------------------------------------
+let g:y2r_config = {
+\ 'tmp_file': '/tmp/exchange_file',
+\ 'key_file': expand('$HOME') . '/.exchange.key',
+\ 'host'    : 'localhost',
+\ 'port'    : 52224,
+\}
+function! Yank2Remote()
+  call writefile(split(@", '\n'), g:y2r_config.tmp_file, 'b')
+  let s:params = ['cat %s %s | nc -w1 %s %s']
+  for s:item in ['key_file', 'tmp_file', 'host', 'port']
+    let s:params += [shellescape(g:y2r_config[s:item])]
+  endfor
+  let s:ret = system(call(function('printf'), s:params))
+endfunction
+nnoremap <silent> <Leader>y :call Yank2Remote()<CR>
+
 filetype plugin indent on		" Required by Neobundle
 NeoBundleCheck				" Install Check by NeoBundle
