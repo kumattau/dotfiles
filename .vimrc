@@ -155,20 +155,6 @@ let fortran_free_source=1		" 自由形式を有効にする
 let fortran_do_enddo=1			" doループのインデント
 let fortran_indent_less=1		" プログラム単位のインデントを無効化
 " ------------------------------------------------------------------------------
-" GUI specific setting
-" ------------------------------------------------------------------------------
-if has("gui_running")
-  if has("win32") || has("win64")
-    set guifont=MS_Gothic:h10:cSHIFTJIS	" フォントを小さくする (windows)
-  else
-    set guifont=Monospace\ 10		" フォントを小さくする (not windows)
-  endif
-  set guioptions& guioptions-=T		" ツールバーを非表示
-  if has("vim_starting")		" 起動時のみに動作させる(リロード対応)
-    set columns=80 lines=48		" 84x26 より画面サイズを大きくする
-  endif
-endif
-" ------------------------------------------------------------------------------
 " plugin (NeoBundle)
 " ------------------------------------------------------------------------------
 filetype plugin indent off		" Required by Neobundle
@@ -256,7 +242,7 @@ set listchars=tab:>\ ,trail:_,nbsp:@		" 不可視文字を可視化
 highlight CursorLine gui=underline guifg=NONE guibg=NONE
 highlight CursorLine term=underline cterm=underline ctermfg=NONE ctermbg=NONE
 let g:my_syntax_status='on'
-function! g:my_toggle_syntax()
+function! s:my_toggle_syntax()
   if g:my_syntax_status=='on'
     syntax off
     let g:my_syntax_status='off'
@@ -269,7 +255,7 @@ nnoremap [appr] <Nop>|				" appr 設定ショートカット
 nmap     <Space>a [appr]|			" <Space>a で prefix
 nnoremap <silent> [appr]l :<C-u>set list!<CR>|			" カーソル
 nnoremap <silent> [appr]c :<C-u>set cursorline!<CR>| 		" 不可視文字
-nnoremap <silent> [appr]s :<C-u>call g:my_toggle_syntax()<CR>|	" syntax
+nnoremap <silent> [appr]s :<C-u>call s:my_toggle_syntax()<CR>|	" syntax
 " ------------------------------------------------------------------------------
 " pretty status line
 " ------------------------------------------------------------------------------
@@ -460,7 +446,7 @@ vnoremap <silent> <Space>K :<C-u>call ref#jump('visual', 'webdict')<CR>
 NeoBundle 'othree/html5.vim'			" html5 completion
 NeoBundle 'hail2u/vim-css3-syntax'		" css syntax highlight
 NeoBundle 'mattn/zencoding-vim'			" effective html coding
-NeoBundle 'taichouchou2/vim-javascript'		" javascript syntax highlight
+NeoBundle 'jelera/vim-javascript-syntax'	" javascript syntax highlight
 " ------------------------------------------------------------------------------
 " vim-jedi (python code completion)
 " ------------------------------------------------------------------------------
