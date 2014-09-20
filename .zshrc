@@ -41,10 +41,21 @@ __str2color() {
   local arg=$1
   local str=""
   local r=1
+  local gen;
+
+  for cmd in sha1sum md5sum cksum sum
+  do
+    if which md5sum >/dev/null 2>&1
+    then
+      gen=${cmd}
+      break
+    fi
+  done
+
   for ((r=1; r <= 100; r++))
   do
     str="${str}${arg}"
-    local sig=$(echo "${str}" | md5sum | awk '{print $1}')
+    local sig=$(echo "${str}" | ${cmd} | awk '{print $1}')
     local i=1
     for ((i=1; ${i} <= 30; i++))
     do
