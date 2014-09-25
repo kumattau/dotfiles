@@ -445,7 +445,7 @@ vnoremap <silent> <Space>K :<C-u>call ref#jump('visual', 'webdict')<CR>
 " ------------------------------------------------------------------------------
 NeoBundle 'othree/html5.vim'			" html5 completion
 NeoBundle 'hail2u/vim-css3-syntax'		" css syntax highlight
-NeoBundle 'mattn/zencoding-vim'			" effective html coding
+NeoBundle 'mattn/emmet-vim'			" effective html coding
 NeoBundle 'jelera/vim-javascript-syntax'	" javascript syntax highlight
 " ------------------------------------------------------------------------------
 " vim-jedi (python code completion)
