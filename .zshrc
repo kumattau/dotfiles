@@ -3,95 +3,218 @@
 # ------------------------------------------------------------------------------
 export LANG=ja_JP.UTF-8			# 日本語設定
 autoload -U is-at-least			# zsh バージョン切り分けモジュール
-export EDITOR=vim			# エディタを vim に設定
-export PAGER=lv				# ページャを lv に設定
-export LV="-c -Outf8"			# エスケープシーケンス解釈・UTF-8変換
+# ------------------------------------------------------------------------------
+# local PATH
+# ------------------------------------------------------------------------------
+# if [ -e "$HOME/.local" ]
+# then
+#     export PATH="$HOME/.local:$PATH"
+# fi
+# ------------------------------------------------------------------------------
+# PAGER
+# ------------------------------------------------------------------------------
+if which lv >/dev/null 2>&1
+then
+    export PAGER=lv
+    export LV="-c -Outf8" 		# エスケープシーケンス解釈・UTF-8変換
+fi
+# ------------------------------------------------------------------------------
+# EDITOR
+# ------------------------------------------------------------------------------
+if which vim >/dev/null 2>&1
+then
+    export EDITOR=vim
+fi
 # ------------------------------------------------------------------------------
 # TERM
 # ------------------------------------------------------------------------------
-__export_best_term () {
-  for term in $*
-  do
-    prfx=$(echo $term | cut -c1)
-    if [ -f /lib/terminfo/$prfx/$term -o -f /usr/share/terminfo/$prfx/$term ]
-    then
-      export TERM=$term
-      break
-    fi
-  done
+__export_best_term ()
+{
+    local term
+    local prefix
+    for term in "$@"
+    do
+        prefix=$(echo $term | cut -c1)
+        if [ -f /lib/terminfo/$prefix/$term -o \
+	     -f /usr/share/terminfo/$prefix/$term ]
+        then
+            export TERM=$term
+            break
+        fi
+    done
 }
-__export_best_term screen-256color xterm-256color xterm-color xterm
+__export_best_term screen-256color screen-color xterm-256color xterm-color xterm
 # ------------------------------------------------------------------------------
-# COLOR THEME (https://github.com/sona-tar/terminal-color-theme)
+# terminal color theme
 # ------------------------------------------------------------------------------
-autoload -U colors; colors					# カラー機能
-test -e ~/.dircolors && eval $(dircolors -b ~/.dircolors)	# dircolors 読込
-if [ -e ~/.terminal-color-theme ]
-then
-  COLOR_THEME=molokai
-  source ~/.terminal-color-theme/color-theme-${COLOR_THEME}/${COLOR_THEME}.sh
-  eval $(dircolors -b)
-fi
+# https://github.com/sona-tar/terminal-color-theme
+__change_terminal_color_theme()
+{
+    local theme=$1
+    if [ -e ~/.terminal-color-theme ]
+    then
+        source ~/.terminal-color-theme/color-theme-$theme/$theme.sh
+    fi
+}
+__change_terminal_color_theme tangotango
+# ------------------------------------------------------------------------------
+# LS_COLORS
+# ------------------------------------------------------------------------------
+eval $(dircolors -b)
+
+# https://github.com/trapd00r/LS_COLORS
+__export_ls_colors_by_dircolors()
+{
+    if [ -e ~/.dircolors ]
+    then
+        eval $(dircolors -b ~/.dircolors)
+    fi
+}
+# https://github.com/sharkdp/vivid
+__export_ls_colors_by_vivid()
+{
+    local theme=$1
+    if which vivid >/dev/null 2>&1
+    then
+        export LS_COLORS="$(vivid generate $theme)"
+    fi
+}
+# __export_ls_colors_by_dircolors
+# __export_ls_colors_by_vivid solarized-dark
 # ------------------------------------------------------------------------------
 # プロンプト
 # ------------------------------------------------------------------------------
 # 文字列に明るい色を割り当てる
 # http://kakurasan.ehoh.net/summary/palette.color256.term.html
-__str2color() {
-  local arg=$1
-  local str=""
-  local r=1
-  local gen;
+# https://stackoverflow.com/questions/15682537/ansi-color-specific-rgb-sequence-bash
+__str2color_256b() {
+    local arg="$1"
+    local cmd
 
-  for cmd in sha1sum md5sum cksum sum
-  do
-    if which md5sum >/dev/null 2>&1
-    then
-      gen=${cmd}
-      break
-    fi
-  done
+    local i
+    local j
 
-  for ((r=1; r <= 100; r++))
-  do
-    str="${str}${arg}"
-    local sig=$(echo "${str}" | ${cmd} | awk '{print $1}')
-    local i=1
-    for ((i=1; ${i} <= 30; i++))
+    local key
+
+    for cmd in sha1sum md5sum cksum sum
     do
-      local red=$(($(printf "%d" "0x$(echo ${sig}|cut -c$((${i}+0)))") % 6))
-      local gre=$(($(printf "%d" "0x$(echo ${sig}|cut -c$((${i}+1)))") % 6))
-      local blu=$(($(printf "%d" "0x$(echo ${sig}|cut -c$((${i}+2)))") % 6))
-      # グレースケールは省く
-      if ((${red} == ${gre} && ${gre} == ${blu})); then continue; fi
-      # 青系はディレクトリの配色と被るので省く
-      if ((${red} <  ${blu} || ${gre} <  ${blu})); then continue; fi
-      # GBR 値の合計が大きい(明るい)場合、採用する
-      local sum=$((${red} + ${gre} + ${blu}))
-      if ((9 <= ${sum} && ${sum} <= 12))
-      then
-        echo $((16 + ${red} * 36 + ${gre} * 6 + ${blu}))
-        return 0
-      fi
+        if which $cmd >/dev/null 2>&1
+        then
+            break
+        fi
     done
-  done
-  return 1
+
+    key=""
+    for ((j = 0; j < 100; j++))
+    do
+        key="$key$arg"
+
+        local sig=$(echo "$key" | $cmd | awk '{print $1}')
+        local len=$(printf "$sig" | wc -c)
+
+        for ((i = 1; i + 2 <= len; i++))
+        do
+            local R=$(($(printf "%d" "0x"$(echo $sig | cut -c$((i + 0)))) % 6))
+            local G=$(($(printf "%d" "0x"$(echo $sig | cut -c$((i + 1)))) % 6))
+            local B=$(($(printf "%d" "0x"$(echo $sig | cut -c$((i + 2)))) % 6))
+            # グレースケールは省く
+            if ((R == G && G == B))
+            then
+                continue
+            fi
+            # 青系はディレクトリの配色と被るので省く
+            if ((R < B || G < B))
+            then
+                continue
+            fi
+            # GBR 値の合計が大きい(明るい)場合、採用する
+            local sum=$((R + G + B))
+            if ((9 <= sum && sum <= 12))
+            then
+                echo $((16 + 36 * R + 6 * G + B))
+                return 0
+            fi
+        done
+    done
+
+    return 1
+}
+# https://gist.github.com/XVilka/8346728
+__str2color_true() {
+    local arg="$1"
+    local cmd
+
+    local i
+    local j
+
+    local key
+
+    for cmd in sha1sum md5sum cksum sum
+    do
+        if which $cmd >/dev/null 2>&1
+        then
+            break
+        fi
+    done
+
+    key=""
+    for ((j = 0; j < 100; j++))
+    do
+        key="$key$arg"
+
+        local sig=$(echo "$key" | $cmd | awk '{print $1}')
+        local len=$(printf "$sig" | wc -c)
+
+        for ((i = 1; i + 5 <= len; i++))
+        do
+            local R=$(printf "%d" "0x"$(echo $sig | cut -c$((i + 0)),$((i + 1))))
+            local G=$(printf "%d" "0x"$(echo $sig | cut -c$((i + 2)),$((i + 3))))
+            local B=$(printf "%d" "0x"$(echo $sig | cut -c$((i + 4)),$((i + 5))))
+            # グレースケールは省く
+            if ((R == G && G == B))
+            then
+                continue
+            fi
+            # 青系はディレクトリの配色と被るので省く
+            if ((R < B || G < B))
+            then
+                continue
+            fi
+            # GBR 値の合計が大きい(明るい)場合、採用する
+            if ((128 < R && 128 < G && 128 < B))
+            then
+                echo "$R;$G;$B"
+                return 0
+            fi
+        done
+    done
+
+    return 1
 }
 # 配色テスト関数(引数の文字列をカラー番号に変換して色付きで表示)
 __print_str2color() {
-  local str=""
-  for str in $*
-  do
-    local col="$(__str2color ${str})"
-    local lbl="$(printf "%3d %s" ${col} ${str})"
-    echo -e "\e[38;5;${col}m${lbl}\e[m"
-  done
+    local str
+    local col
+    local lbl
+    for str in "$@"
+    do
+        col="$(__str2color_256b $str)"
+        lbl="$(printf "%3d %s" $col $str)"
+        echo -e "\e[38;5;${col}m${lbl}\e[m"
+
+        col="$(__str2color_true $str)"
+        lbl="$(printf "%s %s" $col $str)"
+        echo -e "\e[38;2;${col}m${lbl}\e[m"
+    done
 }
-PROMPT="%n@%m:%~$ "			# debian 風 (user@host:path$)
-local __clr=$'%{\e[38;5;'$(__str2color ${HOST%%.*})'m%}'
+#local __clr=$'%{\e[38;5;'$(__str2color_256b ${HOST%%.*})'m%}'
+local __clr=$'%{\e[38;2;'$(__str2color_true ${HOST%%.*})'m%}'
 local __rst=$'%{\e[m%}'
+PROMPT="%n@%m:%~$ "			# debian 風 (user@host:path$)
 PROMPT="$__clr$PROMPT$__rst"		# ホスト名で色をつける
 PROMPT="%B$PROMPT%b"			# 全体をboldする
+unset __clr
+unset __rst
 # ------------------------------------------------------------------------------
 # キーバインド
 # ------------------------------------------------------------------------------
@@ -158,8 +281,9 @@ fi
 # ------------------------------------------------------------------------------
 # ウィンドウタイトルの更新
 # ------------------------------------------------------------------------------
-precmd() {
-  echo -ne "\033]0;${HOST%%.*}:${PWD}\007"
+precmd()
+{
+    echo -ne "\033]0;${USER}@${HOST%%.*}:${PWD}\007"
 }
 # ------------------------------------------------------------------------------
 # その他
@@ -181,15 +305,59 @@ alias zmv='noglob zmv -W'
 # ------------------------------------------------------------------------------
 if is-at-least 4.3.15
 then
-  autoload -Uz chpwd_recent_dirs cdr add-zsh-hook
-  add-zsh-hook chpwd chpwd_recent_dirs
-  zstyle ':chpwd:*' recent-dirs-max 5000
-  zstyle ':chpwd:*' recent-dirs-default yes
-  zstyle ':completion:*' recent-dirs-insert both
+    autoload -Uz chpwd_recent_dirs cdr add-zsh-hook
+    add-zsh-hook chpwd chpwd_recent_dirs
+    zstyle ':chpwd:*' recent-dirs-max 5000
+    zstyle ':chpwd:*' recent-dirs-default yes
+    zstyle ':completion:*' recent-dirs-insert both
 fi
 # ------------------------------------------------------------------------------
-# alias (basic)
+# auto-fu (https://github.com/hchbaw/auto-fu.zsh.git)
 # ------------------------------------------------------------------------------
+if [ -e ~/.zsh/auto-fu.zsh ]
+then
+    source ~/.zsh/auto-fu.zsh/auto-fu.zsh
+    function zle-line-init() { auto-fu-init }
+    zle -N zle-line-init
+    zstyle ':completion:*' completer _oldlist _complete
+    zstyle ':auto-fu:var' postdisplay $''
+fi
+# ------------------------------------------------------------------------------
+# autojump (http://github.com/joelthelion/autojump.git)
+# ------------------------------------------------------------------------------
+if [ -e ~/.zsh/autojump ]
+then
+    path=(~/.zsh/autojump/bin $path)
+    fpath=(~/.zsh/autojump/bin $fpath)
+    source ~/.zsh/autojump/bin/autojump.zsh
+fi
+# ------------------------------------------------------------------------------
+# zaw (https://github.com/zsh-users/zaw.git
+# ------------------------------------------------------------------------------
+if is-at-least 4.3.10 && [ -e ~/.zsh/zaw ]
+then
+    source ~/.zsh/zaw/zaw.zsh
+    zstyle ':filter-select' case-insensitive yes # 絞り込みをcase-insensitiveに
+    zmodload zsh/parameter
+    function zaw-src-dirstack() {
+        : ${(A)candidates::=$dirstack}
+        actions=("zaw-callback-execute"
+                 "zaw-callback-replace-buffer"
+                 "zaw-callback-append-to-buffer")
+        act_descriptions=("execute" "replace edit buffer" "append to edit buffer")
+    }
+    zaw-register-src -n dirstack zaw-src-dirstack
+
+    bindkey '^g^j' zaw-cdr
+    bindkey '^g^t' zaw-tmux
+    bindkey '^g^h' zaw-history
+    bindkey '^g^p' zaw-dirstack
+    bindkey '^g^g' zaw-git-files
+fi
+# ------------------------------------------------------------------------------
+# common alias
+# ------------------------------------------------------------------------------
+alias ls="ls --indicator=classify --literal --color=auto --time-style=long-iso --show-control-chars"
 alias rm="rm -i"			# 削除時確認
 alias cp="cp -ip"			# コピー時確認 mode/onwer/timestamp保存
 alias mv="mv -i"			# 移動時確認
@@ -197,48 +365,37 @@ alias hs="history -E 1"			# 履歴の全検索
 alias vi="vim"				# vi の代わりに vim を使う
 alias view="vim -R"			# view の代わりに vim を使う
 # ------------------------------------------------------------------------------
-# auto-fu (https://github.com/hchbaw/auto-fu.zsh.git)
+# pbcopy emulated by xsel
 # ------------------------------------------------------------------------------
-# if [ -e ~/.zsh/auto-fu.zsh ]
-# then
-#   source ~/.zsh/auto-fu.zsh/auto-fu.zsh
-#   function zle-line-init() { auto-fu-init }
-#   zle -N zle-line-init
-#   zstyle ':completion:*' completer _oldlist _complete
-#   zstyle ':auto-fu:var' postdisplay $''
-# fi
-# ------------------------------------------------------------------------------
-# autojump (http://github.com/joelthelion/autojump.git)
-# ------------------------------------------------------------------------------
-# if [ -e ~/.zsh/autojump ]
-# then
-#   path=(~/.zsh/autojump/bin $path)
-#   fpath=(~/.zsh/autojump/bin $fpath)
-#   source ~/.zsh/autojump/bin/autojump.zsh
-# fi
-# ------------------------------------------------------------------------------
-# zaw (https://github.com/zsh-users/zaw.git
-# ------------------------------------------------------------------------------
-if is-at-least 4.3.10 && [ -e ~/.zsh/zaw ]
+if which xsel >/dev/null 2>&1
 then
-  source ~/.zsh/zaw/zaw.zsh
-  zstyle ':filter-select' case-insensitive yes # 絞り込みをcase-insensitiveに
-  zmodload zsh/parameter
-  function zaw-src-dirstack() {
-      : ${(A)candidates::=$dirstack}
-      actions=("zaw-callback-execute"
-               "zaw-callback-replace-buffer"
-               "zaw-callback-append-to-buffer")
-      act_descriptions=("execute" "replace edit buffer" "append to edit buffer")
-  }
-  zaw-register-src -n dirstack zaw-src-dirstack
-
-  bindkey '^g^j' zaw-cdr
-  bindkey '^g^t' zaw-tmux
-  bindkey '^g^h' zaw-history
-  bindkey '^g^p' zaw-dirstack
-  bindkey '^g^g' zaw-git-files
+    if ! which pbcopy >/dev/null 2>&1
+    then
+        alias="xsel --clipboard --input"
+    fi
+    if ! which pbpaste >/dev/null 2>&1
+    then
+        alias="xsel --clipboard --output"
+    fi
 fi
+# ------------------------------------------------------------------------------
+# wcwidth-cjk
+# ------------------------------------------------------------------------------
+# https://github.com/fumiyas/wcwidth-cjk
+# if which wcwidth-cjk >/dev/null 2>&1
+# then
+#     solib="$(cd $(dirname $(which wcwidth-cjk))/../lib && pwd)/wcwidth-cjk.so"
+#     if [ -f "$solib" ]
+#     then
+#         if [ -z "$LD_PRELOD" ]
+#         then
+#             export LD_PRELOAD="$solib"
+#         else
+#             export LD_PRELOAD="$solib:$LD_PRELOAD"
+#         fi
+#     fi
+#     unset solib
+# fi
 # ------------------------------------------------------------------------------
 # source local zshrc
 # ------------------------------------------------------------------------------
